@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Teacher.html</title>
+</head>
+
+<body>
+    <?php
+        session_start();
+        if($_SESSION["login_session"] != true)
+                header("Location: index.html");
+        echo "Welcome!<br/>";
+    ?>
+
+    <table width=40% border=1 align=center>
+        <tr>
+            <td align=center>
+                <b><a href=wkg.php> 吳國光教授 </a></b>
+            </td>
+        </tr>
+        <tr>
+            <td align=center>
+                <b><a href=mtw.php> 馬停偉助教 </a></b>
+            </td>
+        </tr>
+    </table>
+</body>
+
+</html>

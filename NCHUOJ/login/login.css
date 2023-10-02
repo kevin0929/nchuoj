@@ -1,0 +1,30 @@
+.im {
+    position : relative;
+    top : 50px;
+    left: 85px;
+}
+.t1{
+    position: absolute; 
+    top : 80px;
+    left: 600px;
+}
+
+.t2{
+    position : absolute;
+    top: 105px;
+    left: 600px;
+}
+
+.ta {
+    position: absolute;
+    top: 160px;
+    left: 500px;
+}
+
+body {
+    width: 500px;
+    border: 3px solid black;
+    margin-top:5px;
+    margin-bottom:300px;
+    margin-left:400px;
+}
