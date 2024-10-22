@@ -1,2 +1,2 @@
 # NCHUOJ
-A Judge System For Nation Chung Hsing University
+A Judge System For National Chung Hsing University

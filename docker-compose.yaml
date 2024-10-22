@@ -1,0 +1,48 @@
+version: '3'
+services:
+  backend:
+    build: ./venue
+    restart: always
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+      - ./venue:/app
+    ports:
+      - "1136:1136"
+    depends_on:
+      - database
+
+  database:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_DB: venue_db
+      POSTGRES_USER: venue
+      POSTGRES_PASSWORD: venue
+      PGDATA: /var/lib/postgresql/data
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    ports:
+      - "1137:5432"
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: tn781927@yahoo.com.tw
+      PGADMIN_DEFAULT_PASSWORD: kevin0929
+      PGADMIN_LISTEN_PORT: 8000
+    ports:
+      - "8000:8000"
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+
+  judge0:
+    image: judge0/judge0:latest
+    restart: always
+    ports:
+      - 2358:2358
+
+
+volumes:
+  db-data:
+  pgadmin-data:

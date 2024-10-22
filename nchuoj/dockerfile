@@ -1,0 +1,17 @@
+FROM python:3.10
+LABEL maintainer="matingwei929@gmail.com"
+
+RUN apt-get update -y && \
+    apt-get clean && \
+    useradd -m nchuoj
+
+COPY . /app
+
+WORKDIR /app
+
+RUN chown -R nchuoj:nchuoj /app && \
+    pip install --no-cache-dir -r requirements.txt
+
+USER nchuoj
+
+CMD ["python", "app.py"]
