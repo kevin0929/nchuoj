@@ -1,93 +1,78 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Online Judge Home</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-100">
-
-    <div class="min-h-screen flex">
-
-        <!-- Left Sidebar (Navigation bar) -->
-        <nav class="w-1/12 bg-amber-800 p-1 flex flex-col items-start justify-between">
-            <div class="flex flex-col items-center space-y-4">
-                <img src="{{ url_for('static', filename='img/logo_white.png') }}" alt="Logo" class="">
-                
-                <!-- Navigation items -->
-                <ul class="space-y-6">
-                    <li>
-                        <a href="#" class="block flex flex-col items-center p-4 bg-amber-800 rounded-lg hover:bg-amber-700 transition duration-200">
-                            <img src="{{ url_for('static', filename='img/home_white.png') }}" alt="Home Icon" class="w-12 h-12">
-                            <span class="text-white text-sm mt-3">HOME</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="block flex flex-col items-center p-4 bg-amber-800 rounded-lg hover:bg-amber-700 transition duration-200">
-                            <img src="{{ url_for('static', filename='img/problem_white.png') }}" alt="Problem Icon" class="w-12 h-12">
-                            <span class="text-white text-sm mt-3">PROBLEM</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="block flex flex-col items-center p-4 bg-amber-800 rounded-lg hover:bg-amber-700 transition duration-200">
-                            <img src="{{ url_for('static', filename='img/course_white.png') }}" alt="Course Icon" class="w-12 h-12">
-                            <span class="text-white text-sm mt-3">COURSE</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="block flex flex-col items-center p-4 bg-amber-800 rounded-lg hover:bg-amber-700 transition duration-200">
-                            <img src="{{ url_for('static', filename='img/about_white.png') }}" alt="Course Icon" class="w-12 h-12">
-                            <span class="text-white text-sm mt-3">COURSE</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-            
-            <div class="text-white item-center text-sm">
-                <!-- Optional footer content or user-related info -->
-                <p>&copy; 2024 NCHUOJ</p>
-            </div>
-        </nav>
-
-        <!-- Content area -->
-        <div class="w-11/12 p-6 flex space-x-6">
-
-            <!-- Left side - Personal Info -->
-            <div class="w-1/2 bg-white rounded-lg shadow-lg p-6">
-                <div class="text-center mb-4">
-                    <img src="{{ url_for('static', filename='img/logo_black.png') }}" alt="Avatar" class="rounded-full w-24 h-24 mx-auto mb-4">
-                    <h2 class="text-xl font-semibold">Username</h2>
-                </div>
-                <div class="text-left">
-                    <p class="text-gray-700"><strong>留言：</strong>快來解題吧！</p>
-                    <p class="text-gray-700"><strong>解決幾題：</strong>50</p>
-                    <p class="text-gray-700"><strong>排名：</strong>35</p>
-                </div>
-            </div>
-
-            <!-- Right side - Announcements -->
-            <div class="w-1/2 bg-white rounded-lg shadow-lg p-6">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4">Announcements</h2>
-                <ul class="list-disc pl-5 space-y-2">
-                    <li class="text-gray-700">
-                        <a href="#" class="hover:underline text-blue-600">NOJ 主機狀況頁面 - 2023-12-05 03:09</a>
-                    </li>
-                    <li class="text-gray-700">
-                        <a href="#" class="hover:underline text-blue-600">主機硬碟擴充 - 2023-05-28 14:38</a>
-                    </li>
-                    <li class="text-gray-700">
-                        <a href="#" class="hover:underline text-blue-600">Updates about our service - 2023-05-03 19:09</a>
-                    </li>
-                    <li class="text-gray-700">
-                        <a href="#" class="hover:underline text-blue-600">Problem Statistics is now online! - 2022-03-28 07:32</a>
-                    </li>
-                    <!-- Add more announcements as needed -->
-                </ul>
-            </div>
-
+{% extends "base.html" %}
+{% block title %} Home {% endblock title%}
+{% block content %}
+    <!-- Left side - Personal Info -->
+    <div class="w-1/2 bg-white rounded-lg shadow-lg p-6">
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">Profile</h2>
+        <div class="flex flex-col items-center space-y-12">
+        <img src="{{ url_for('static', filename='img/logo_black.png') }}" alt="Profile Picture" class="w-48 h-48 rounded-full border-4 border-gray-100 shadow-lg">
         </div>
+        <div class="text-center mt-8 space-y-4">
+        <h2 class="text-2xl font-bold bg-gradient-to-r from-yellow-400 to-pink-500 bg-clip-text text-transparent">kevin0929</h2>
+        <p class="italic text-gray-5004">我愛中興大學，我愛 coding！</p>
+        <hr class="h-px bg-gray-200 border-1 dark:bg-gray-700">
+        </div>
+        <div class="flex justify-center items-center space-x-16 mt-8">
+        <div class="text-center">
+            <p class="text-gray-500">Solved</p>
+            <p class="text-2xl font-bold">62</p>
+        </div>
+        <div class="h-10 border-l border-gray-300"></div>
+        <div class="text-center">
+            <p class="text-gray-500">Submissions</p>
+            <p class="text-2xl font-bold">192</p>
+        </div>
+        <div class="h-10 border-l border-gray-300"></div>
+        <div class="text-center">
+            <p class="text-gray-500">Score</p>
+            <p class="text-2xl font-bold">4704</p>
+        </div>
+        </div>
+        
     </div>
 
-</body>
-</html>
+    <!-- Right side - Announcements -->
+    <div class="w-1/2 bg-white rounded-lg shadow-lg p-6">
+    <h2 class="text-2xl font-bold mb-4 text-gray-800">Announcements</h2>
+    <div class="overflow-x-auto">
+        <table class="min-w-full text-left table-auto">
+        <thead class="bg-gray-100">
+            <tr>
+            <th class="px-6 py-3 text-gray-600 font-medium">TITLE</th>
+            <th class="px-6 py-3 text-gray-600 font-medium">CREATE AT</th>
+            </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+            <tr>
+            <td class="px-6 py-4">NOJ 主機狀況頁面</td>
+            <td class="px-6 py-4">2023-12-05 03:09</td>
+            </tr>
+            <tr>
+            <td class="px-6 py-4">主機硬碟擴充</td>
+            <td class="px-6 py-4">2023-05-28 14:38</td>
+            </tr>
+            <tr>
+            <td class="px-6 py-4">Updates about our service</td>
+            <td class="px-6 py-4">2023-05-03 19:09</td>
+            </tr>
+            <tr>
+            <td class="px-6 py-4">Problem Statistics is now online!</td>
+            <td class="px-6 py-4">2022-03-28 07:32</td>
+            </tr>
+            <tr>
+            <td class="px-6 py-4">編譯參數說明 Compiler Settings</td>
+            <td class="px-6 py-4">2022-03-14 02:29</td>
+            </tr>
+            <tr>
+            <td class="px-6 py-4">提交結果說明 Submission Status</td>
+            <td class="px-6 py-4">2022-03-11 14:48</td>
+            </tr>
+            <tr>
+            <td class="px-6 py-4">曾忘記密碼時……</td>
+            <td class="px-6 py-4">2020-10-09 19:10</td>
+            </tr>
+        </tbody>
+        </table>
+    </div>
+    </div>
+{% endblock content %}
