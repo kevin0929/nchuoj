@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Judge Home</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+
+    <div class="min-h-screen flex">
+
+        <!-- Left Sidebar (Navigation bar) -->
+        <nav class="w-1/12 bg-amber-800 p-1 flex flex-col items-start justify-between">
+            <div class="flex flex-col items-center space-y-4">
+                <img src="{{ url_for('static', filename='img/logo_white.png') }}" alt="Logo" class="">
+                
+                <!-- Navigation items -->
+                <ul class="space-y-6">
+                    <li>
+                        <a href="#" class="block flex flex-col items-center p-4 bg-amber-800 rounded-lg hover:bg-amber-700 transition duration-200">
+                            <img src="{{ url_for('static', filename='img/home_white.png') }}" alt="Home Icon" class="w-12 h-12">
+                            <span class="text-white text-sm mt-3">HOME</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="block flex flex-col items-center p-4 bg-amber-800 rounded-lg hover:bg-amber-700 transition duration-200">
+                            <img src="{{ url_for('static', filename='img/problem_white.png') }}" alt="Problem Icon" class="w-12 h-12">
+                            <span class="text-white text-sm mt-3">PROBLEM</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="block flex flex-col items-center p-4 bg-amber-800 rounded-lg hover:bg-amber-700 transition duration-200">
+                            <img src="{{ url_for('static', filename='img/course_white.png') }}" alt="Course Icon" class="w-12 h-12">
+                            <span class="text-white text-sm mt-3">COURSE</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="block flex flex-col items-center p-4 bg-amber-800 rounded-lg hover:bg-amber-700 transition duration-200">
+                            <img src="{{ url_for('static', filename='img/about_white.png') }}" alt="Course Icon" class="w-12 h-12">
+                            <span class="text-white text-sm mt-3">COURSE</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="text-white item-center text-sm">
+                <!-- Optional footer content or user-related info -->
+                <p>&copy; 2024 NCHUOJ</p>
+            </div>
+        </nav>
+
+        <!-- Content area -->
+        <div class="w-11/12 p-6 flex space-x-6">
+
+            <!-- Left side - Personal Info -->
+            <div class="w-1/2 bg-white rounded-lg shadow-lg p-6">
+                <div class="text-center mb-4">
+                    <img src="{{ url_for('static', filename='img/logo_black.png') }}" alt="Avatar" class="rounded-full w-24 h-24 mx-auto mb-4">
+                    <h2 class="text-xl font-semibold">Username</h2>
+                </div>
+                <div class="text-left">
+                    <p class="text-gray-700"><strong>留言：</strong>快來解題吧！</p>
+                    <p class="text-gray-700"><strong>解決幾題：</strong>50</p>
+                    <p class="text-gray-700"><strong>排名：</strong>35</p>
+                </div>
+            </div>
+
+            <!-- Right side - Announcements -->
+            <div class="w-1/2 bg-white rounded-lg shadow-lg p-6">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">Announcements</h2>
+                <ul class="list-disc pl-5 space-y-2">
+                    <li class="text-gray-700">
+                        <a href="#" class="hover:underline text-blue-600">NOJ 主機狀況頁面 - 2023-12-05 03:09</a>
+                    </li>
+                    <li class="text-gray-700">
+                        <a href="#" class="hover:underline text-blue-600">主機硬碟擴充 - 2023-05-28 14:38</a>
+                    </li>
+                    <li class="text-gray-700">
+                        <a href="#" class="hover:underline text-blue-600">Updates about our service - 2023-05-03 19:09</a>
+                    </li>
+                    <li class="text-gray-700">
+                        <a href="#" class="hover:underline text-blue-600">Problem Statistics is now online! - 2022-03-28 07:32</a>
+                    </li>
+                    <!-- Add more announcements as needed -->
+                </ul>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>

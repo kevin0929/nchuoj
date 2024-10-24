@@ -1,11 +1,11 @@
 version: '3'
 services:
   backend:
-    build: ./venue
+    build: ./nchuoj
     restart: always
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
-      - ./venue:/app
+      - ./nchuoj:/app
     ports:
       - "1136:1136"
     depends_on:
@@ -15,9 +15,9 @@ services:
     image: postgres:latest
     restart: always
     environment:
-      POSTGRES_DB: venue_db
-      POSTGRES_USER: venue
-      POSTGRES_PASSWORD: venue
+      POSTGRES_DB: nchuoj_db
+      POSTGRES_USER: nchuoj
+      POSTGRES_PASSWORD: nchuoj
       PGDATA: /var/lib/postgresql/data
     volumes:
       - db-data:/var/lib/postgresql/data
