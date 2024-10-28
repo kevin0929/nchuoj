@@ -46,10 +46,11 @@
                     </li>
                 </ul>
             </div>
-            
-            <div class="text-white item-center text-sm">
-                <!-- Optional footer content or user-related info -->
-                <p>&copy; 2024 NCHUOJ</p>
+
+            <div class="flex flex-col items-center text-white text-sm space-y-2 mb-4 p-5">
+                <a href="{{ url_for('user_api.logout') }}" class="bg-amber-800 hover:bg-amber-700 text-white font-bold py-2 px-8 rounded border border-white transition duration-200 focus:outline-none focus:ring-2 focus:ring-white mb-4 text-center">
+                    Logout
+                </a>
             </div>
         </nav>
 

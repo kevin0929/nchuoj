@@ -1,4 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask_jwt_extended import (
+    JWTManager, create_access_token, jwt_required, get_jwt_identity, set_access_cookies, unset_jwt_cookies
+)
 
 from model.user import User
 from model.utils.db import get_orm_session
@@ -8,8 +11,10 @@ __all__ = ["user_api"]
 
 user_api = Blueprint("user_api", __name__)
 
+jwt = JWTManager()
 
 @user_api.route("/<userid>", methods=["GET"])
+@jwt_required()
 def index(userid):
     '''create user index
     '''
@@ -67,10 +72,12 @@ def login():
             '''
 
             if password == user.password:
-                '''if password is correct, generate user index information
-                '''
-                userid = user.userid
-                return redirect(url_for("user_api.index", userid=userid))
+                # generate user's jwt and store it into Cookie
+                access_token = create_access_token(identity=user.userid)
+                response = redirect(url_for("user_api.index", userid=user.userid))
+                set_access_cookies(response, access_token)
+
+                return response
             else:
                 flash("Invalid username or password.", "error")
                 return redirect(url_for("login_page"))
@@ -81,3 +88,14 @@ def login():
     
     return redirect(url_for("login_page"))
 
+
+@user_api.route("/logout", methods=["POST"])
+@jwt_required()
+def logout():
+    '''unset jwt token from cookie and redirect to login page
+    '''
+
+    response = redirect(url_for("login_page"))
+    unset_jwt_cookies(response)
+
+    return response
