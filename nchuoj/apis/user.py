@@ -11,8 +11,6 @@ __all__ = ["user_api"]
 
 user_api = Blueprint("user_api", __name__)
 
-jwt = JWTManager()
-
 @user_api.route("/<userid>", methods=["GET"])
 @jwt_required()
 def index(userid):
@@ -87,15 +85,3 @@ def login():
             flash("An error occurred during login.", "error")
     
     return redirect(url_for("login_page"))
-
-
-@user_api.route("/logout", methods=["POST"])
-@jwt_required()
-def logout():
-    '''unset jwt token from cookie and redirect to login page
-    '''
-
-    response = redirect(url_for("login_page"))
-    unset_jwt_cookies(response)
-
-    return response

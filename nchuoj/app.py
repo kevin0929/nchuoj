@@ -1,6 +1,6 @@
 import os
-from flask import Flask, render_template, get_flashed_messages
-from flask_jwt_extended import JWTManager
+from flask import Flask, render_template, get_flashed_messages, url_for, redirect
+from flask_jwt_extended import JWTManager, jwt_required, unset_access_cookies
 from datetime import timedelta
 
 from apis import *
@@ -27,6 +27,8 @@ def setup_app(app):
     app.config["JWT_TOKEN_LOCATION"] = ["cookies"]
     app.config["JWT_COOKIE_SECURE"] = False
     app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(minutes=30)
+    app.config["JWT_ACCESS_COOKIE_PATH"] = "/"
+    app.config["JWT_REFRESH_COOKIE_PATH"] = "/"
     jwt = JWTManager()
     jwt.init_app(app)
 
@@ -40,6 +42,24 @@ app = app()
 def login_page():
     messages = get_flashed_messages(with_categories=True)
     return render_template("login.html", messages=messages)
+
+
+'''
+[!] fix needed
+    1. It should belong to `user_api` (user.py).
+    2. Encounter some multi request problem, if we don't put it in root path
+        it can not totally delete `access_token` in cookies
+'''
+@app.route("/logout", methods=["GET"])
+@jwt_required()
+def logout():
+    '''unset jwt token from cookie and redirect to login page
+    '''
+
+    response = redirect(url_for("login_page"))
+    unset_access_cookies(response)
+
+    return response
 
 
 if __name__ == '__main__':
