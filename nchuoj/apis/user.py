@@ -11,7 +11,7 @@ __all__ = ["user_api"]
 
 user_api = Blueprint("user_api", __name__)
 
-@user_api.route("/<userid>", methods=["GET"])
+@user_api.route("/<userid>/index", methods=["GET"])
 @jwt_required()
 def index(userid):
     '''create user index
@@ -24,17 +24,9 @@ def index(userid):
             return "User not found", 404
 
         # generate user index information
-        data = {
-            "userid": user.userid,
-            "username": user.username,
-            "full_name": user.full_name,
-            "profile_pricture": user.profile_picture,
-            "message": user.message,
-            "submission_count": user.submission_count,
-            "accepted_count": user.accepted_count,
-            "rating": user.rating
-        }
-        return render_template("user/index.html", data=data)
+        user_info = user.to_dict()
+
+        return render_template("user/index.html", user=user_info)
 
     except Exception as err:
         print(f"Error fetching user data: {err}")
@@ -85,3 +77,15 @@ def login():
             flash("An error occurred during login.", "error")
     
     return redirect(url_for("login_page"))
+
+
+# @app.route("/logout", methods=["GET"])
+# @jwt_required()
+# def logout():
+#     '''unset jwt token from cookie and redirect to login page
+#     '''
+
+#     response = redirect(url_for("login_page"))
+#     unset_access_cookies(response)
+
+#     return response

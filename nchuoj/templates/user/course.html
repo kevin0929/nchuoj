@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %} Course {% endblock title%}
+{% block content %}
+<div class="w-full bg-white rounded-lg shadow-md p-6">
+    <h2 class="text-2xl font-semibold text-gray-800 mb-6">課程列表</h2>
+    
+    <table class="min-w-full border border-gray-200 rounded-lg">
+        <thead>
+            <tr class="bg-amber-600 text-white text-left">
+                <th class="p-4 border-b border-gray-200">課程編號</th>
+                <th class="p-4 border-b border-gray-200">課程名稱</th>
+                <th class="p-4 border-b border-gray-200">教師姓名</th>
+                <th class="p-4 border-b border-gray-200">描述</th>
+            </tr>
+        </thead>
+        <tbody class="bg-white">
+            {% for course in courses %}
+            <tr class="hover:bg-gray-100 transition duration-200">
+                <td class="p-4 border-b border-gray-200">{{ course.courseid }}</td>
+                <td class="p-4 border-b border-gray-200">{{ course.coursename }}</td>
+                <td class="p-4 border-b border-gray-200">{{ course.teacher }}</td>
+                <td class="p-4 border-b border-gray-200">{{ course.description }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock content %}

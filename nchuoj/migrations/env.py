@@ -4,6 +4,7 @@ import os
 from model.base import Base
 from model.user import User
 from model.course import Course
+from model.course_user import CourseUser
 
 from logging.config import fileConfig
 

@@ -10,7 +10,7 @@ def app():
     app = Flask(__name__)
     app = setup_app(app)
 
-    api2prefix = [(user_api, "/user")]
+    api2prefix = [(user_api, "/user"), (course_api, "/course")]
     for api, prefix in api2prefix:
         app.register_blueprint(api, url_prefix=prefix)
 
@@ -27,8 +27,6 @@ def setup_app(app):
     app.config["JWT_TOKEN_LOCATION"] = ["cookies"]
     app.config["JWT_COOKIE_SECURE"] = False
     app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(minutes=30)
-    app.config["JWT_ACCESS_COOKIE_PATH"] = "/"
-    app.config["JWT_REFRESH_COOKIE_PATH"] = "/"
     jwt = JWTManager()
     jwt.init_app(app)
 

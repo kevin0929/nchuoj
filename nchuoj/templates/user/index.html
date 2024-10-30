@@ -8,24 +8,24 @@
         <img src="{{ url_for('static', filename='img/logo_black.png') }}" alt="Profile Picture" class="w-48 h-48 rounded-full border-4 border-gray-100 shadow-lg">
         </div>
         <div class="text-center mt-8 space-y-4">
-        <h2 class="text-2xl font-bold bg-gradient-to-r from-yellow-400 to-pink-500 bg-clip-text text-transparent">{{ data['username'] }}</h2>
-        <p class="italic text-gray-5004"> {{ data['message'] }} </p>
+        <h2 class="text-2xl font-bold bg-gradient-to-r from-yellow-400 to-pink-500 bg-clip-text text-transparent">{{ user.username }}</h2>
+        <p class="italic text-gray-5004"> {{ user.message }} </p>
         <hr class="h-px bg-gray-200 border-1 dark:bg-gray-700">
         </div>
         <div class="flex justify-center items-center space-x-16 mt-8">
         <div class="text-center">
             <p class="text-gray-500">Solved</p>
-            <p class="text-2xl font-bold"> {{ data['accepted_count'] }} </p>
+            <p class="text-2xl font-bold"> {{ user.accepted_count }} </p>
         </div>
         <div class="h-10 border-l border-gray-300"></div>
         <div class="text-center">
             <p class="text-gray-500">Submissions</p>
-            <p class="text-2xl font-bold"> {{ data['submission_count'] }} </p>
+            <p class="text-2xl font-bold"> {{ user.submission_count }} </p>
         </div>
         <div class="h-10 border-l border-gray-300"></div>
         <div class="text-center">
             <p class="text-gray-500">rating</p>
-            <p class="text-2xl font-bold"> {{ data['rating'] }} </p>
+            <p class="text-2xl font-bold"> {{ user.rating }} </p>
         </div>
         </div>
         
