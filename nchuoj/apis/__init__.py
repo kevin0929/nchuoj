@@ -1,4 +1,5 @@
 from . import user
+from . import course
 
 from .user import *
 from .course import *

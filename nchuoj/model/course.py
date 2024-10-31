@@ -10,7 +10,6 @@ from sqlalchemy import (
     UniqueConstraint,
     ForeignKey,
 )
-from sqlalchemy.ext.declarative import declarative_base
 
 __all__ = ["Course", ]
 

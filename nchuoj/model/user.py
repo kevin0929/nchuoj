@@ -9,9 +9,9 @@ from sqlalchemy import (
     DateTime,
     Float
 )
-from sqlalchemy.ext.declarative import declarative_base
 
-__all__ = ["users", ]
+
+__all__ = ["User", ]
 
 
 class User(Base):

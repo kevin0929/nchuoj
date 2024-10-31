@@ -2,6 +2,9 @@ from sqlalchemy import Column, Integer, ForeignKey
 from model.base import Base
 
 
+__all__ = ["CourseUser", ]
+
+
 class CourseUser(Base):
     __tablename__ = "courseuser"
 
