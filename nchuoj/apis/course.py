@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
+from model.announcement import Announcement
 from model.course import Course
 from model.course_user import CourseUser
 from model.user import User
@@ -54,4 +55,26 @@ def course(userid, courseid):
     except Exception as err:
         print(f"Error fetching user data: {err}")
 
+    return "test"
+
+
+@course_api.route("/<userid>/<courseid>/announcement")
+@jwt_required()
+def announcement(userid, courseid):
+    '''announcements inside course
+    '''
+    try:
+        session = get_orm_session()
+        user = session.query(User).filter_by(userid=userid).first()
+        announcements = session.query(Announcement).filter_by(courseid=courseid).all()
+
+        user_info = user.to_dict()
+        announcement_list = [announcement.to_dict() for announcement in announcements]
+
+        return render_template("user/announcement.html", user=user_info, announcements=announcement_list)
+    
+    except Exception as err:
+        return err
+        print(f"Error fetching user data: {err}")
+    
     return "test"
