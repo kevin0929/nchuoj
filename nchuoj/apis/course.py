@@ -4,6 +4,7 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 from model.announcement import Announcement
 from model.course import Course
 from model.course_user import CourseUser
+from model.homework import Homework
 from model.user import User
 from model.utils.db import get_orm_session
 
@@ -36,7 +37,7 @@ def index(userid):
     except Exception as err:
         print(f"Error fetching user data: {err}")
     
-    return "error"
+    return "Error handling (not done yet)..."
 
 
 @course_api.route("/<userid>/<courseid>/index")
@@ -50,12 +51,12 @@ def course(userid, courseid):
 
         user_info = user.to_dict()
 
-        return render_template("user/course.html", user=user_info)
+        return render_template("user/course.html", user=user_info, courseid=courseid)
 
     except Exception as err:
         print(f"Error fetching user data: {err}")
 
-    return "test"
+    return "Error handling (not done yet)..."
 
 
 @course_api.route("/<userid>/<courseid>/announcement")
@@ -74,7 +75,28 @@ def announcement(userid, courseid):
         return render_template("user/announcement.html", user=user_info, announcements=announcement_list)
     
     except Exception as err:
-        return err
         print(f"Error fetching user data: {err}")
     
-    return "test"
+    return "Error handling (not done yet)..."
+
+
+@course_api.route("/<userid>/<courseid>/homework")
+@jwt_required()
+def homework(userid, courseid):
+    '''homeworks inside course
+    '''
+
+    try:
+        session = get_orm_session
+        user = session.query(User).filter_by(userid=userid).first()
+        homeworks = session.query(Homework).filter_by(courseid=courseid).all()
+
+        user_info = user.to_dict()
+        homework_list = [homework.to_dict() for homework in homeworks]
+
+        return render_template("user/homework.html", user=user_info, homeworks=homework_list)
+    
+    except Exception as err:
+        print(f"Error fetching user data: {err}")
+
+    return "Error handling (not done yet)..."

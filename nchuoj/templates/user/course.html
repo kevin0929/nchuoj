@@ -19,7 +19,7 @@
         <aside class="w-1/5 bg-gray-100 p-6 mr-6 rounded-lg shadow">
             <ul class="space-y-6">
                 <li>
-                    <a href="#" class="block text-gray-700 hover:text-blue-600 font-medium">Announcements</a>
+                    <a href="{{ url_for('course_api.announcement', userid=user.userid, courseid=courseid) }}" class="block text-gray-700 hover:text-blue-600 font-medium">Announcements</a>
                 </li>
                 <li>
                     <a href="#" class="block text-gray-700 hover:text-blue-600 font-medium">Homeworks</a>
