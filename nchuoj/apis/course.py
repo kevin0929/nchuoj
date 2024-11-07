@@ -40,6 +40,12 @@ def index(userid):
     return "Error handling (not done yet)..."
 
 
+"""
+''' 
+TODO : 
+    1. When user first enter this course, what will he see?
+'''
+
 @course_api.route("/<userid>/<courseid>/index")
 @jwt_required()
 def course(userid, courseid):
@@ -57,6 +63,7 @@ def course(userid, courseid):
         print(f"Error fetching user data: {err}")
 
     return "Error handling (not done yet)..."
+"""
 
 
 @course_api.route("/<userid>/<courseid>/announcement")
@@ -67,14 +74,17 @@ def announcement(userid, courseid):
     try:
         session = get_orm_session()
         user = session.query(User).filter_by(userid=userid).first()
+        course = session.query(Course).filter_by(courseid=courseid).first()
         announcements = session.query(Announcement).filter_by(courseid=courseid).all()
 
         user_info = user.to_dict()
+        course_info = course.to_dict()
         announcement_list = [announcement.to_dict() for announcement in announcements]
 
-        return render_template("user/announcement.html", user=user_info, announcements=announcement_list)
+        return render_template("user/announcement.html", user=user_info, course=course_info, announcements=announcement_list)
     
     except Exception as err:
+        return err
         print(f"Error fetching user data: {err}")
     
     return "Error handling (not done yet)..."
@@ -87,14 +97,16 @@ def homework(userid, courseid):
     '''
 
     try:
-        session = get_orm_session
+        session = get_orm_session()
         user = session.query(User).filter_by(userid=userid).first()
+        course = session.query(Course).filter_by(courseid=courseid).first()
         homeworks = session.query(Homework).filter_by(courseid=courseid).all()
 
         user_info = user.to_dict()
+        course_info = course.to_dict()
         homework_list = [homework.to_dict() for homework in homeworks]
 
-        return render_template("user/homework.html", user=user_info, homeworks=homework_list)
+        return render_template("user/homeworks.html", user=user_info, course=course_info, homeworks=homework_list)
     
     except Exception as err:
         print(f"Error fetching user data: {err}")
