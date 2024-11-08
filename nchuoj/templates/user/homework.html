@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% block title %} Homeworks {% endblock title %}
+
+{% block content %}
+<div class="w-full p-6">
+
+    <!-- Breadcrumb Navigation -->
+    <nav class="text-sm text-gray-500 mb-6">
+        <a href="#" class="hover:text-blue-600">Algorithm2023</a> &gt; 
+        <span>Homeworks</span>
+    </nav>
+
+    <!-- Main Content Area -->
+    <div class="flex w-full">
+
+        <!-- Left Sidebar (Menu) -->
+        <aside class="w-1/5 bg-gray-100 p-6 mr-6 rounded-lg shadow">
+            <ul class="space-y-6">
+                <li>
+                    <a href="{{ url_for('course_api.announcement', userid=user.userid, courseid=course.courseid) }}" class="block text-gray-700 hover:text-blue-600 font-medium">Announcements</a>
+                </li>
+                <li>
+                    <a href="{{ url_for('course_api.homeworks', userid=user.userid, courseid=course.courseid) }}" class="block text-gray-700 hover:text-blue-600 font-medium">Homeworks</a>
+                </li>
+                <li>
+                    <a href="#" class="block text-gray-700 hover:text-blue-600 font-medium">Submissions</a>
+                </li>
+            </ul>
+        </aside>
+
+        <!-- Main Content Block (Homework) -->
+        <div class="w-4/5 bg-white p-8 rounded-lg shadow">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">{{ homework.name }}</h2>
+
+            
+            <div class="flex space-x-6 mb-6">
+                <!-- Availability Section -->
+                <div class="w-1/3 bg-gray-50 p-4 rounded-lg shadow">
+                    <h3 class="text-lg font-semibold text-gray-700 mb-2">Availability</h3>
+                    <div class="flex justify-between text-sm text-gray-500">
+                        <div>
+                            <span class="font-medium">From:</span> {{ homework.start_date }}
+                        </div>
+                        <div>
+                            <span class="font-medium">Due:</span> {{ homework.end_date }}
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <span class="bg-red-500 text-white text-xs font-semibold px-2 py-1 rounded">OVER</span>
+                    </div>
+                </div>
+
+                <!-- Problems Table -->
+                <div class="w-2/3 bg-gray-50 p-4 rounded-lg shadow">
+                    <h3 class="text-lg font-semibold text-gray-700 mb-2">Problems</h3>
+                    <table class="min-w-full border border-gray-200 rounded-lg">
+                        <thead>
+                            <tr>
+                                <th class="px-4 py-2 text-left text-sm font-medium text-gray-600 border-b">#</th>
+                                <th class="px-4 py-2 text-left text-sm font-medium text-gray-600 border-b">PID</th>
+                                <th class="px-4 py-2 text-left text-sm font-medium text-gray-600 border-b">Name</th>
+                                <th class="px-4 py-2 text-left text-sm font-medium text-gray-600 border-b">Score</th>
+                                <th class="px-4 py-2 text-left text-sm font-medium text-gray-600 border-b">Tag</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-sm text-gray-700">
+                            {% for problem in problems %}
+                            <tr class="border-b hover:bg-gray-100 cursor-pointer"
+                                onclick="window.location.href='{{ url_for('course_api.problem', userid=user.userid, courseid=course.courseid, homeworkid=homework.homeworkid, problemid=problem.problemid) }}'">
+                                <td class="px-4 py-2">{{ loop.index }}</td>
+                                <td class="px-4 py-2 text-blue-600 hover:underline"><a href="#">{{ problem.problemid }}</a></td>
+                                <td class="px-4 py-2">{{ problem.name }}</td>
+                                <td class="px-4 py-2">{{ problem.score }}</td>
+                                <td class="px-4 py-2">{{ problem.tag }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Description Section -->
+            <div class="mb-6">
+                <h3 class="text-lg font-semibold text-gray-700">Description</h3>
+                <p class="text-sm text-gray-500 mt-2">{{ homework.description }}</p>
+                <a href="#" class="text-blue-600 hover:underline text-sm mt-2 block">PDF 連結</a>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock content %}

@@ -19,16 +19,11 @@
         <aside class="w-1/5 bg-gray-100 p-6 mr-6 rounded-lg shadow">
             <ul class="space-y-6">
                 <li>
-                    <a href="{{ url_for('course_api.announcement', userid=user.userid, courseid=courseid) }}" class="block text-gray-700 hover:text-blue-600 font-medium">Announcements</a>
+                    <a href="{{ url_for('course_api.announcement', userid=user.userid, courseid=course.courseid) }}" class="block text-gray-700 hover:text-blue-600 font-medium">Announcements</a>
                 </li>
                 <li>
                     <a href="#" class="block text-gray-700 hover:text-blue-600 font-medium">Homeworks</a>
                 </li>
-                <!-- Does it really need?
-                <li>
-                    <a href="#" class="block text-gray-700 hover:text-blue-600 font-medium">Problems</a>
-                </li>
-                -->
                 <li>
                     <a href="#" class="block text-gray-700 hover:text-blue-600 font-medium">Submissions</a>
                 </li>
@@ -40,7 +35,7 @@
             <!-- Problem Header -->
             <div class="flex justify-between items-center mb-8">
                 <div>
-                    <h1 class="text-2xl font-bold text-gray-800">Problem #453 - Getting Started</h1>
+                    <h1 class="text-2xl font-bold text-gray-800">Problem #{{ problem.problemid }} - {{ problem.name }}</h1>
                     <span class="inline-block bg-blue-100 text-blue-800 text-xs font-semibold rounded-full px-2 py-1 mt-2">HW0.5</span>
                 </div>
                 <div class="flex space-x-8">
@@ -50,7 +45,7 @@
                     </div>
                     <div class="text-center">
                         <p class="text-sm text-gray-500">Score</p>
-                        <p class="text-xl font-semibold text-gray-800">100 <span class="text-gray-400">/ 100</span></p>
+                        <p class="text-xl font-semibold text-gray-800">0 <span class="text-gray-400">/ {{ problem.score }}</span></p>
                     </div>
                     <button class="bg-gray-800 hover:bg-gray-900 text-white font-semibold py-2 px-6 rounded transition">SUBMIT</button>
                     <button class="bg-gray-800 hover:bg-gray-900 text-white font-semibold py-2 px-6 rounded transition">STATS</button>

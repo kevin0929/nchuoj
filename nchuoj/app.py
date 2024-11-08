@@ -20,13 +20,13 @@ def app():
 def setup_app(app):
     # session config
     app.config["SECRET_KEY"] = os.urandom(24)
-    app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(minutes=30)
+    app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(hours=2)
 
     # jwt config
     app.config["JWT_SECRET_KEY"] = "my_secert_key_should_in_environment"
     app.config["JWT_TOKEN_LOCATION"] = ["cookies"]
     app.config["JWT_COOKIE_SECURE"] = False
-    app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(minutes=30)
+    app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=2)
     jwt = JWTManager()
     jwt.init_app(app)
 

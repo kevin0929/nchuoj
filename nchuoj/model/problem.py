@@ -28,11 +28,11 @@ class Problem(Base):
 
     def to_dict(self):
         return {
+            "problemid": self.problemid,
             "homeworkid": self.homeworkid,
-            "courseid": self.courseid,
+            "score": self.score,
             "name": self.name,
             "description": self.description,
-            "is_show": self.is_show,
-            "start_date": self.start_date,
-            "end_date": self.end_date
+            "tag": self.tag,
+            "is_show": self.is_show
         }

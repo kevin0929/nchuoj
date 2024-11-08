@@ -1,10 +1,11 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask import Blueprint, render_template, request, redirect, url_for, flash, abort
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from model.announcement import Announcement
 from model.course import Course
 from model.course_user import CourseUser
 from model.homework import Homework
+from model.problem import Problem
 from model.user import User
 from model.utils.db import get_orm_session
 
@@ -13,6 +14,18 @@ __all__ = ["course_api"]
 
 course_api = Blueprint("course_api", __name__)
 
+
+def get_user_course(userid, courseid=None):
+    session = get_orm_session()
+    user = session.query(User).filter_by(userid=userid).first()
+    course = session.query(Course).filter_by(courseid=courseid).first() if courseid else None
+
+    if not user or (courseid and not course):
+        abort(404)
+
+    return user, course
+
+
 @course_api.route("/<userid>/list", methods=["GET"])
 @jwt_required()
 def index(userid):
@@ -20,7 +33,7 @@ def index(userid):
     '''
     try:
         session = get_orm_session()
-        user = session.query(User).filter_by(userid=userid).first()
+        user, _ = get_user_course(userid)
         courses = (
             session.query(Course)
             .join(CourseUser, Course.courseid == CourseUser.cu_id)
@@ -29,10 +42,12 @@ def index(userid):
         )
 
         # generate user index information
-        user_info = user.to_dict()
-        course_list = [course.to_dict() for course in courses]
+        data = {
+            "user": user.to_dict(),
+            "courses": [course.to_dict() for course in courses],
+        }
 
-        return render_template("user/courses.html", user=user_info, courses=course_list)
+        return render_template("user/courses.html", **data)
 
     except Exception as err:
         print(f"Error fetching user data: {err}")
@@ -66,49 +81,104 @@ def course(userid, courseid):
 """
 
 
-@course_api.route("/<userid>/<courseid>/announcement")
+@course_api.route("/<userid>/<courseid>/announcement", methods=["GET"])
 @jwt_required()
 def announcement(userid, courseid):
     '''announcements inside course
     '''
     try:
         session = get_orm_session()
-        user = session.query(User).filter_by(userid=userid).first()
-        course = session.query(Course).filter_by(courseid=courseid).first()
+        user, course = get_user_course(userid, courseid)
         announcements = session.query(Announcement).filter_by(courseid=courseid).all()
 
-        user_info = user.to_dict()
-        course_info = course.to_dict()
-        announcement_list = [announcement.to_dict() for announcement in announcements]
+        data = {
+            "user": user.to_dict(),
+            "course": course.to_dict(),
+            "announcements": [announcement.to_dict() for announcement in announcements],
+        }
 
-        return render_template("user/announcement.html", user=user_info, course=course_info, announcements=announcement_list)
+        return render_template("user/announcement.html", **data)
     
     except Exception as err:
-        return err
         print(f"Error fetching user data: {err}")
     
     return "Error handling (not done yet)..."
 
 
-@course_api.route("/<userid>/<courseid>/homework")
+@course_api.route("/<userid>/<courseid>/homeworks", methods=["GET"])
 @jwt_required()
-def homework(userid, courseid):
+def homeworks(userid, courseid):
     '''homeworks inside course
     '''
 
     try:
         session = get_orm_session()
-        user = session.query(User).filter_by(userid=userid).first()
-        course = session.query(Course).filter_by(courseid=courseid).first()
+        user, course = get_user_course(userid, courseid)
         homeworks = session.query(Homework).filter_by(courseid=courseid).all()
 
-        user_info = user.to_dict()
-        course_info = course.to_dict()
-        homework_list = [homework.to_dict() for homework in homeworks]
+        data = {
+            "user": user.to_dict(),
+            "course": course.to_dict(),
+            "homeworks": [homework.to_dict() for homework in homeworks],
+        }
 
-        return render_template("user/homeworks.html", user=user_info, course=course_info, homeworks=homework_list)
+        return render_template("user/homeworks.html", **data)
     
     except Exception as err:
         print(f"Error fetching user data: {err}")
 
+    return "Error handling (not done yet)..."
+
+
+@course_api.route("/<userid>/<courseid>/homework/<homeworkid>", methods=["GET"])
+@jwt_required()
+def homework(userid, courseid, homeworkid):
+    '''homework info inside homework card be selected
+    '''
+
+    try:
+        session = get_orm_session()
+        user, course = get_user_course(userid, courseid)
+        homework = session.query(Homework).filter_by(homeworkid=homeworkid).first()
+        problems = session.query(Problem).filter_by(homeworkid=homeworkid).all()
+
+        data = {
+            "user": user.to_dict(),
+            "course": course.to_dict(),
+            "homework": homework.to_dict(),
+            "problems": [problem.to_dict() for problem in problems]
+        }
+
+        return render_template("user/homework.html", **data)
+    
+    except Exception as err:
+        print(f"Error fetching user data: {err}")
+
+    return "Error handling (not done yet)..."
+
+
+@course_api.route("/<userid>/<courseid>/homework/<homeworkid>/<problemid>")
+@jwt_required()
+def problem(userid, courseid, homeworkid, problemid):
+    '''problem inside homework
+    '''
+
+    try:
+        session = get_orm_session()
+        user, course = get_user_course(userid, courseid)
+        homework = session.query(Homework).filter_by(homeworkid=homeworkid).first()
+        problem = session.query(Problem).filter_by(problemid=problemid).first()
+
+        data = {
+            "user": user.to_dict(),
+            "course": course.to_dict(),
+            "homework": homework.to_dict(),
+            "problem": problem.to_dict()
+        }
+
+        return render_template("user/problem.html", **data)
+    
+    except Exception as err:
+        print(f"Error fetching user data: {err}")
+    
     return "Error handling (not done yet)..."
