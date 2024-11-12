@@ -6,6 +6,7 @@ from . import announcement
 from . import homework
 from . import problem
 from . import submission
+from . import testcase
 
 from .base import *
 from .user import *
@@ -15,6 +16,7 @@ from .announcement import *
 from .homework import *
 from .problem import *
 from .submission import *
+from .testcase import *
 
 
 __all__ = [
@@ -25,5 +27,6 @@ __all__ = [
     *announcement.__all__,
     *homework.__all__,
     *problem.__all__,
-    *submission.__all__
+    *submission.__all__,
+    *testcase.__all__,
 ]

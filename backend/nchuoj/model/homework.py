@@ -16,7 +16,7 @@ __all__ = ["Homework", ]
 class Homework(Base):
     __tablename__ = "homework"
 
-    homeworkid = Column(Integer, primary_key=True)
+    homeworkid = Column(Integer, primary_key=True, autoincrement=True)
     courseid = Column(Integer, ForeignKey("course.courseid"), nullable=False)
     name = Column(String, nullable=False)
     description = Column(String, nullable=False)

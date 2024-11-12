@@ -15,7 +15,7 @@ __all__ = ["Problem", ]
 class Problem(Base):
     __tablename__ = "problem"
 
-    problemid = Column(Integer, primary_key=True)
+    problemid = Column(Integer, primary_key=True, autoincrement=True)
     homeworkid = Column(Integer, ForeignKey("homework.homeworkid"), nullable=False)
     score = Column(Integer, nullable=False)
     name = Column(String, nullable=False)

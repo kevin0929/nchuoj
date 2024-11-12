@@ -16,7 +16,7 @@ __all__ = ["Announcement", ]
 class Announcement(Base):
     __tablename__ = "announcement"
 
-    announcementid = Column(Integer, primary_key=True)
+    announcementid = Column(Integer, primary_key=True, autoincrement=True)
     courseid = Column(Integer, ForeignKey("course.courseid"), nullable=False)
     title = Column(String, nullable=False)
     content = Column(String, nullable=False)

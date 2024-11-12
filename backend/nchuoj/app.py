@@ -10,7 +10,7 @@ def app():
     app = Flask(__name__)
     app = setup_app(app)
 
-    api2prefix = [(user_api, "/user"), (course_api, "/course")]
+    api2prefix = [(user_api, "/user"), (course_api, "/course"), (problem_api, "/problem")]
     for api, prefix in api2prefix:
         app.register_blueprint(api, url_prefix=prefix)
 

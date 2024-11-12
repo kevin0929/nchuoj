@@ -17,7 +17,7 @@ __all__ = ["Submission", ]
 class Submission(Base):
     __tablename__ = "submission"
 
-    submissionid = Column(Integer, primary_key=True)
+    submissionid = Column(Integer, primary_key=True, autoincrement=True)
     problemid = Column(Integer, ForeignKey("problem.problemid"), nullable=False)
     runtime = Column(Float, nullable=False)
     memory = Column(Integer, nullable=False)
