@@ -40,12 +40,12 @@ class SubmitService:
  
             if response.status_code == 201:
                 result = response.json()
-                print(result)
-
                 status = result["status"]["description"]
 
+                # if test failure, stop continuously test
                 if status != "Accepted":
                     final_status = status
+                    break
 
                 # sum up time and memory of all testcase
                 execute_time += float(result["time"])

@@ -18,6 +18,7 @@ class Submission(Base):
     __tablename__ = "submission"
 
     submissionid = Column(Integer, primary_key=True, autoincrement=True)
+    userid = Column(Integer, ForeignKey("users.userid"), nullable=False)
     problemid = Column(Integer, ForeignKey("problem.problemid"), nullable=False)
     runtime = Column(Float, nullable=False)
     memory = Column(Integer, nullable=False)
@@ -32,6 +33,7 @@ class Submission(Base):
     def to_dict(self):
         return {
             "submissionid": self.submissionid,
+            "userid": self.userid,
             "problemid": self.problemid,
             "runtime": self.runtime,
             "memory": self.memory,

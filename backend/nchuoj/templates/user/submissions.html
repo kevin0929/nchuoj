@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block title %} Course index - submissions {% endblock title %}
+
+{% block content %}
+<div class="w-full p-6">
+
+    <!-- Breadcrumb Navigation -->
+    <nav class="text-sm text-black mb-6">
+        <a href="#" class="hover:text-blue-600">Algorithm2023</a> &gt; 
+        <a href="#" class="hover:text-blue-600">Problems</a> &gt; 
+        <span>453</span>
+        <hr class="h-px my-3 bg-gray-500 border-0 dark:bg-gray-700">
+    </nav>
+
+    <!-- Main Content Area -->
+    <div class="flex w-full">
+
+        <!-- Left Sidebar (Menu) -->
+        <aside class="w-1/5 bg-gray-100 p-6 mr-6 rounded-lg shadow">
+            <ul class="space-y-6">
+                <li>
+                    <a href="{{ url_for('course_api.announcement', userid=user.userid, courseid=course.courseid) }}" class="block text-gray-700 hover:text-blue-600 font-medium">Announcements</a>
+                </li>
+                <li>
+                    <a href="{{ url_for('course_api.homeworks', userid=user.userid, courseid=course.courseid) }}" class="block text-gray-700 hover:text-blue-600 font-medium">Homeworks</a>
+                </li>
+                <li>
+                    <a href="{{ url_for('course_api.submissions', userid=user.userid, courseid=course.courseid) }}" class="block text-gray-700 hover:text-blue-600 font-medium">Submissions</a>
+                </li>
+            </ul>
+        </aside>
+
+        <!-- Right Content Area -->
+        <div class="w-4/5 bg-white p-8 rounded-lg shadow">
+            <!-- Submission Table -->
+            <table class="min-w-full bg-white border-collapse">
+                <thead>
+                    <tr>
+                        <th class="py-2 px-4 bg-gray-200 text-left font-bold text-gray-600">Id</th>
+                        <th class="py-2 px-4 bg-gray-200 text-left font-bold text-gray-600">Problem</th>
+                        <th class="py-2 px-4 bg-gray-200 text-left font-bold text-gray-600">User</th>
+                        <th class="py-2 px-4 bg-gray-200 text-left font-bold text-gray-600">Status</th>
+                        <th class="py-2 px-4 bg-gray-200 text-left font-bold text-gray-600">Run Time</th>
+                        <th class="py-2 px-4 bg-gray-200 text-left font-bold text-gray-600">Memory</th>
+                        <th class="py-2 px-4 bg-gray-200 text-left font-bold text-gray-600">Score</th>
+                        <th class="py-2 px-4 bg-gray-200 text-left font-bold text-gray-600">Lang</th>
+                        <th class="py-2 px-4 bg-gray-200 text-left font-bold text-gray-600">Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for submission in submissions %}
+                    <tr class="border-b hover:bg-gray-100">
+                        <td class="py-2 px-4">{{ submission.submissionid }}</td>
+                        <td class="py-2 px-4"><a href="#" class="text-blue-500 underline">{{ submission.problemid }}</a></td>
+                        <td class="py-2 px-4">{{ user.username }}</td>
+                        <td class="py-2 px-4">
+                            <span class="{% if submission.status == 'Accepted' %}text-green-500{% else %}text-red-500{% endif %} font-semibold">
+                                {{ submission.status }}
+                            </span>
+                        </td>
+                        <td class="py-2 px-4">{{ submission.runtime }} ms</td>
+                        <td class="py-2 px-4">{{ submission.memory }} KB</td>
+                        <td class="py-2 px-4">{{ submission.score }}</td>
+                        <td class="py-2 px-4">{{ submission.language }}</td>
+                        <td class="py-2 px-4">{{ submission.submit_time.strftime('%Y-%m-%d %H:%M') }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+{% endblock content %}

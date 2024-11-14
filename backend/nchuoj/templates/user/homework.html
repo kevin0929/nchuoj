@@ -23,7 +23,7 @@
                     <a href="{{ url_for('course_api.homeworks', userid=user.userid, courseid=course.courseid) }}" class="block text-gray-700 hover:text-blue-600 font-medium">Homeworks</a>
                 </li>
                 <li>
-                    <a href="#" class="block text-gray-700 hover:text-blue-600 font-medium">Submissions</a>
+                    <a href="{{ url_for('course_api.submissions', userid=user.userid, courseid=course.courseid) }}" class="block text-gray-700 hover:text-blue-600 font-medium">Submissions</a>
                 </li>
             </ul>
         </aside>

@@ -9,6 +9,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const codeSection = document.getElementById('codeSection');
     const fileSection = document.getElementById('fileSection');
 
+    const problemId = confirmSubmitButton.dataset.problemId;
+    const courseId = confirmSubmitButton.dataset.courseId;
+
+
     // show modal
     submitButton.addEventListener('click', function(event) {
         event.preventDefault();
@@ -40,10 +44,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // 確認提交操作
     confirmSubmitButton.addEventListener('click', async function() {
-        const problemId = "1";
         const submitUrl = `/problem/${problemId}/submit`;
 
         const formData = new FormData();
+        formData.append('courseid', courseId);
         // submit the data of code field
         if (!codeSection.classList.contains('hidden')) {
             const language = document.getElementById('languageCode').value;
@@ -62,10 +66,19 @@ document.addEventListener('DOMContentLoaded', function() {
             formData.append('content', file);
         }
 
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+        }
+
         // Post to submitUrl
         try {
             const response = await fetch(submitUrl, {
                 method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': getCookie('csrf_access_token')
+                },
                 body: formData
             });
 

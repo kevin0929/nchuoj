@@ -6,6 +6,7 @@ from model.course import Course
 from model.course_user import CourseUser
 from model.homework import Homework
 from model.problem import Problem
+from model.submission import Submission
 from model.user import User
 from model.utils.db import get_orm_session
 
@@ -124,6 +125,28 @@ def homeworks(userid, courseid):
 
         return render_template("user/homeworks.html", **data)
     
+    except Exception as err:
+        print(f"Error fetching user data: {err}")
+
+    return "Error handling (not done yet)..."
+
+
+@course_api.route("/<userid>/<courseid>/submissions", methods=["GET"])
+@jwt_required()
+def submissions(userid, courseid):
+    try:
+        session = get_orm_session()
+        user, course = get_user_course(userid, courseid)
+        submissions = session.query(Submission).filter_by(userid=userid).all()
+        
+        data = {
+            "user": user.to_dict(),
+            "course": course.to_dict(),
+            "submissions": [submission.to_dict() for submission in submissions][::-1]
+        }
+
+        return render_template("user/submissions.html", **data)
+
     except Exception as err:
         print(f"Error fetching user data: {err}")
 
