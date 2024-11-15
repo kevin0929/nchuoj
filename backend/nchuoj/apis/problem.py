@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 from flask import (
     Blueprint,
     render_template,
@@ -21,6 +21,7 @@ __all__ = ["problem_api", ]
 
 problem_api = Blueprint("problem_api", __name__)
 
+
 @problem_api.route("/<problemid>/submit", methods=["GET", "POST"])
 @jwt_required()
 def submit(problemid): 
@@ -39,7 +40,7 @@ def submit(problemid):
         session = get_orm_session()
         testcases_list = session.query(Testcase).filter_by(problemid=problemid).all()
         testcases = [testcase.to_dict() for testcase in testcases_list]
-        problem = session.query(Problem).filter_by(problemid=problemid).first()
+        problem = session.query(Problem).filter_by(problemid=problemid).first().to_dict()
 
         submit_service = SubmitService()
 
@@ -52,9 +53,14 @@ def submit(problemid):
 
         # get language id and make payload, submit
         langid = submit_service.get_language_id(lang)
+        memory_limit = problem["memory_limit"]
+        cpu_time_limit = problem["runtime_limit"]
+
         resp = submit_service.submit(
             langid=langid,
             source_code=source_code,
+            memory_limit=memory_limit,
+            cpu_time_limit=cpu_time_limit,
             testcases=testcases
         )
 
@@ -62,8 +68,8 @@ def submit(problemid):
         runtime = resp["execute_time"]
         memory = resp["memory_usage"]
         status = resp["status"]
-        score = problem.to_dict()["score"]
-        submit_time = datetime.now()
+        score = problem["score"]
+        submit_time = datetime.now(timezone(timedelta(hours=8)))
         userid = get_jwt_identity()
 
         # create Submission interface and sumbit to database
@@ -73,7 +79,7 @@ def submit(problemid):
                 problemid=problemid,
                 runtime=runtime,
                 memory=memory,
-                score=25,
+                score=score if status == "Accepted" else 0,
                 language=lang,
                 status=status,
                 submit_time=submit_time
@@ -84,7 +90,10 @@ def submit(problemid):
 
         session.close()
 
-        return url_for("course_api.submissions", userid=userid, courseid=courseid)
+        return {
+            "redirectUrl": url_for("course_api.submissions", userid=userid, courseid=courseid),
+            "success": True,
+        }
 
     except Exception as err:
         return jsonify({"msg": err, "success": False})

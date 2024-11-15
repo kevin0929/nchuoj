@@ -21,7 +21,7 @@ class Submission(Base):
     userid = Column(Integer, ForeignKey("users.userid"), nullable=False)
     problemid = Column(Integer, ForeignKey("problem.problemid"), nullable=False)
     runtime = Column(Float, nullable=False)
-    memory = Column(Integer, nullable=False)
+    memory = Column(Float, nullable=False)
     score = Column(Integer, nullable=False)
     language = Column(String, nullable=False)
     status = Column(String, nullable=False)

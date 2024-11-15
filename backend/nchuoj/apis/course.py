@@ -137,12 +137,25 @@ def submissions(userid, courseid):
     try:
         session = get_orm_session()
         user, course = get_user_course(userid, courseid)
-        submissions = session.query(Submission).filter_by(userid=userid).all()
+        submissions = (
+            session.query(Submission, Problem)
+            .join(Problem, Submission.problemid == Problem.problemid)
+            .filter(Submission.userid == userid)
+            .all()
+        )
+
+        submission_data = [
+            {
+                "submission": submission.to_dict(),
+                "problem": problem.to_dict()
+            }
+            for submission, problem in submissions
+        ]
         
         data = {
             "user": user.to_dict(),
             "course": course.to_dict(),
-            "submissions": [submission.to_dict() for submission in submissions][::-1]
+            "submissions": submission_data[::-1]
         }
 
         return render_template("user/submissions.html", **data)

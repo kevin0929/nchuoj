@@ -1,4 +1,7 @@
 {% extends "base.html" %}
+{% block extrahead %}
+    <script src="{{ url_for('static', filename='js/submission.js') }}"></script>
+{% endblock extrahead %}
 
 {% block title %} Course index - submissions {% endblock title %}
 
@@ -37,7 +40,7 @@
             <table class="min-w-full bg-white border-collapse">
                 <thead>
                     <tr>
-                        <th class="py-2 px-4 bg-gray-200 text-left font-bold text-gray-600">Id</th>
+                        <th class="py-2 px-4 bg-gray-200 text-left font-bold text-gray-600">Sid</th>
                         <th class="py-2 px-4 bg-gray-200 text-left font-bold text-gray-600">Problem</th>
                         <th class="py-2 px-4 bg-gray-200 text-left font-bold text-gray-600">User</th>
                         <th class="py-2 px-4 bg-gray-200 text-left font-bold text-gray-600">Status</th>
@@ -49,28 +52,16 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for submission in submissions %}
-                    <tr class="border-b hover:bg-gray-100">
-                        <td class="py-2 px-4">{{ submission.submissionid }}</td>
-                        <td class="py-2 px-4"><a href="#" class="text-blue-500 underline">{{ submission.problemid }}</a></td>
-                        <td class="py-2 px-4">{{ user.username }}</td>
-                        <td class="py-2 px-4">
-                            <span class="{% if submission.status == 'Accepted' %}text-green-500{% else %}text-red-500{% endif %} font-semibold">
-                                {{ submission.status }}
-                            </span>
-                        </td>
-                        <td class="py-2 px-4">{{ submission.runtime }} ms</td>
-                        <td class="py-2 px-4">{{ submission.memory }} KB</td>
-                        <td class="py-2 px-4">{{ submission.score }}</td>
-                        <td class="py-2 px-4">{{ submission.language }}</td>
-                        <td class="py-2 px-4">{{ submission.submit_time.strftime('%Y-%m-%d %H:%M') }}</td>
-                    </tr>
-                    {% endfor %}
+
                 </tbody>
             </table>
+            <div id="pagination" class="mt-6 flex justify-center space-x-2">
+            </div>
+            <div id="submissions-data" data-submissions='{{ submissions|tojson }}'></div>
+            <div id="user-data" data-user='{{ user|tojson }}'></div>
+            <div id="course-data" data-course='{{ course|tojson }}'></div>
         </div>
     </div>
 </div>
-
 
 {% endblock content %}

@@ -23,8 +23,8 @@ class Course(Base):
     description = Column(String, nullable=True)
 
     # auth
-    is_activate = Column(Boolean, default=True)
-    is_public = Column(Boolean, default=False)
+    is_activate = Column(Boolean, nullable=False, server_default="true")
+    is_public = Column(Boolean, nullable=False, server_default="false")
 
     # time information
     start_date = Column(DateTime, nullable=True)

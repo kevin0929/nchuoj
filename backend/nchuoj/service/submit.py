@@ -1,3 +1,4 @@
+import base64
 import requests
 
 
@@ -6,10 +7,17 @@ class SubmitService:
         self.JUDGE0_BASE_API_URL = "http://140.120.31.174:2358"
 
 
+    def encode_base64(self, data: str) -> str:
+        '''for url parameter base64_encoded=true
+        '''
+        return base64.b64encode(data.encode("utf-8")).decode("utf-8")
+
     def submit(
         self,
         langid: int,
         source_code: str,
+        memory_limit: float,
+        cpu_time_limit: float,
         testcases,
         wait: bool = True
     ):
@@ -23,15 +31,17 @@ class SubmitService:
         memory_usage = 0
         final_status = "Accepted"
 
-        JUDGE0_API_URL = f"{self.JUDGE0_BASE_API_URL}/submissions?wait=true" if wait else f"{self.JUDGE0_BASE_API_URL}/submissions"
+        JUDGE0_API_URL = f"{self.JUDGE0_BASE_API_URL}/submissions?base64_encoded=true&wait=true" if wait else f"{self.JUDGE0_BASE_API_URL}/submissions"
 
         for testcase in testcases:
-            stdin = testcase["input_data"].decode("utf-8")
-            expected_output = testcase["output_data"].decode("utf-8")
+            stdin = self.encode_base64(testcase["input_data"].decode("utf-8"))
+            expected_output = self.encode_base64(testcase["output_data"].decode("utf-8"))
 
             payload = {
-                "source_code": source_code,
+                "source_code": self.encode_base64(source_code),
                 "language_id": langid,
+                "memory_limit": memory_limit,
+                "cpu_time_limit": cpu_time_limit,
                 "stdin": stdin,
                 "expected_output": expected_output
             }
@@ -49,7 +59,7 @@ class SubmitService:
 
                 # sum up time and memory of all testcase
                 execute_time += float(result["time"])
-                memory_usage += int(result["memory"])
+                memory_usage += int(result["memory"]) 
 
         resp = {
             "execute_time": execute_time,

@@ -82,12 +82,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 body: formData
             });
 
-            const result = response.json();
+            const result = await response.json();
             if (result.success) {
                 alert("提交成功！");
+                window.location.href = result.redirectUrl;
                 submitModal.classList.add('hidden');
             } else {
-                console.log(result);
+                console.log(result.success);
                 alert("提交失敗：" + result.msg);
             }
         } catch (error) {

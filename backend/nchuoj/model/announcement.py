@@ -22,7 +22,7 @@ class Announcement(Base):
     content = Column(String, nullable=False)
 
     # auth
-    is_show = Column(Boolean, default=True)
+    is_show = Column(Boolean, nullable=False, server_default="true")
 
     # time information
     announce_date = Column(DateTime, nullable=True)
