@@ -17,13 +17,13 @@
         <aside class="w-1/5 bg-gray-100 p-6 mr-6 rounded-lg shadow">
             <ul class="space-y-6">
                 <li>
-                    <a href="{{ url_for('course_api.announcement', userid=user.userid, courseid=course.courseid) }}" class="block text-gray-700 hover:text-blue-600 font-medium">Announcements</a>
+                    <a href="{{ url_for('announcement_api.announcement', userid=user.userid, courseid=course.courseid) }}" class="block text-gray-700 hover:text-blue-600 font-medium">Announcements</a>
                 </li>
                 <li>
-                    <a href="{{ url_for('course_api.homeworks', userid=user.userid, courseid=course.courseid) }}" class="block text-gray-700 hover:text-blue-600 font-medium">Homeworks</a>
+                    <a href="{{ url_for('homework_api.homeworks', userid=user.userid, courseid=course.courseid) }}" class="block text-gray-700 hover:text-blue-600 font-medium">Homeworks</a>
                 </li>
                 <li>
-                    <a href="{{ url_for('course_api.submissions', userid=user.userid, courseid=course.courseid) }}" class="block text-gray-700 hover:text-blue-600 font-medium">Submissions</a>
+                    <a href="{{ url_for('submission_api.submissions', userid=user.userid, courseid=course.courseid) }}" class="block text-gray-700 hover:text-blue-600 font-medium">Submissions</a>
                 </li>
             </ul>
         </aside>

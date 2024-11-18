@@ -17,13 +17,13 @@
         <aside class="w-1/5 bg-gray-100 p-6 mr-6 rounded-lg shadow">
             <ul class="space-y-6">
                 <li>
-                    <a href="{{ url_for('course_api.announcement', userid=user.userid, courseid=course.courseid) }}" class="block text-gray-700 hover:text-blue-600 font-medium">Announcements</a>
+                    <a href="{{ url_for('announcement_api.announcement', userid=user.userid, courseid=course.courseid) }}" class="block text-gray-700 hover:text-blue-600 font-medium">Announcements</a>
                 </li>
                 <li>
-                    <a href="{{ url_for('course_api.homeworks', userid=user.userid, courseid=course.courseid) }}" class="block text-gray-700 hover:text-blue-600 font-medium">Homeworks</a>
+                    <a href="{{ url_for('homework_api.homeworks', userid=user.userid, courseid=course.courseid) }}" class="block text-gray-700 hover:text-blue-600 font-medium">Homeworks</a>
                 </li>
                 <li>
-                    <a href="{{ url_for('course_api.submissions', userid=user.userid, courseid=course.courseid) }}" class="block text-gray-700 hover:text-blue-600 font-medium">Submissions</a>
+                    <a href="{{ url_for('submission_api.submissions', userid=user.userid, courseid=course.courseid) }}" class="block text-gray-700 hover:text-blue-600 font-medium">Submissions</a>
                 </li>
             </ul>
         </aside>
@@ -31,7 +31,7 @@
         <!-- Main Content Block (Homework) -->
         <div class="w-4/5 bg-white p-8 rounded-lg shadow">
             <!-- Go back button -->
-            <a href="{{ url_for('course_api.homeworks', userid=user.userid, courseid=course.courseid) }}" class="flex items-center mb-6 text-blue-500 hover:text-blue-700">
+            <a href="{{ url_for('homework_api.homeworks', userid=user.userid, courseid=course.courseid) }}" class="flex items-center mb-6 text-blue-500 hover:text-blue-700">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
                 </svg>
@@ -75,7 +75,7 @@
                         <tbody class="text-sm text-gray-700">
                             {% for problem in problems %}
                             <tr class="border-b hover:bg-gray-100 cursor-pointer"
-                                onclick="window.location.href='{{ url_for('course_api.problem', userid=user.userid, courseid=course.courseid, homeworkid=homework.homeworkid, problemid=problem.problemid) }}'">
+                                onclick="window.location.href='{{ url_for('problem_api.problem', userid=user.userid, courseid=course.courseid, homeworkid=homework.homeworkid, problemid=problem.problemid) }}'">
                                 <td class="px-4 py-2">{{ loop.index }}</td>
                                 <td class="px-4 py-2 text-blue-600 hover:underline"><a href="#">{{ problem.problemid }}</a></td>
                                 <td class="px-4 py-2">{{ problem.name }}</td>

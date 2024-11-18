@@ -17,13 +17,13 @@
         <aside class="w-1/5 bg-gray-100 p-6 mr-6 rounded-lg shadow">
             <ul class="space-y-6">
                 <li>
-                    <a href="{{ url_for('course_api.announcement', userid=user.userid, courseid=course.courseid) }}" class="block text-gray-700 hover:text-blue-600 font-medium">Announcements</a>
+                    <a href="{{ url_for('announcement_api.announcement', userid=user.userid, courseid=course.courseid) }}" class="block text-gray-700 hover:text-blue-600 font-medium">Announcements</a>
                 </li>
                 <li>
-                    <a href="{{ url_for('course_api.homeworks', userid=user.userid, courseid=course.courseid) }}" class="block text-gray-700 hover:text-blue-600 font-medium">Homeworks</a>
+                    <a href="{{ url_for('homework_api.homeworks', userid=user.userid, courseid=course.courseid) }}" class="block text-gray-700 hover:text-blue-600 font-medium">Homeworks</a>
                 </li>
                 <li>
-                    <a href="{{ url_for('course_api.submissions', userid=user.userid, courseid=course.courseid) }}" class="block text-gray-700 hover:text-blue-600 font-medium">Submissions</a>
+                    <a href="{{ url_for('submission_api.submissions', userid=user.userid, courseid=course.courseid) }}" class="block text-gray-700 hover:text-blue-600 font-medium">Submissions</a>
                 </li>
             </ul>
         </aside>
@@ -35,7 +35,7 @@
             <!-- Homework Cards -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {% for homework in homeworks %}
-                <a href="{{ url_for('course_api.homework', userid=user.userid, courseid=course.courseid, homeworkid=homework.homeworkid) }}" class="block">
+                <a href="{{ url_for('homework_api.homework', userid=user.userid, courseid=course.courseid, homeworkid=homework.homeworkid) }}" class="block">
                     <div class="bg-white p-6 rounded-lg shadow-lg transform transition duration-500 hover:scale-105 hover:shadow-xl">
                         <h3 class="text-lg font-semibold text-gray-800 mb-2">{{ homework.name }}</h3>
                         <p class="text-sm text-gray-500 mb-1"><span class="font-medium">Start Date:</span> {{ homework.start_date }}</p>

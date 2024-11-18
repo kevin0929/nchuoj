@@ -10,16 +10,44 @@ from flask import (
 )
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
+from model.homework import Homework
 from model.problem import Problem
 from model.submission import Submission
 from model.testcase import Testcase
-from model.utils.db import get_orm_session
+from model.utils.db import *
 from service.submit import SubmitService
 
 
 __all__ = ["problem_api", ]
 
 problem_api = Blueprint("problem_api", __name__)
+
+
+@problem_api.route("/<userid>/<courseid>/homework/<homeworkid>/<problemid>")
+@jwt_required()
+def problem(userid, courseid, homeworkid, problemid):
+    '''problem inside homework
+    '''
+
+    try:
+        session = get_orm_session()
+        user, course = get_user_course(userid, courseid)
+        homework = session.query(Homework).filter_by(homeworkid=homeworkid).first()
+        problem = session.query(Problem).filter_by(problemid=problemid).first()
+
+        data = {
+            "user": user.to_dict(),
+            "course": course.to_dict(),
+            "homework": homework.to_dict(),
+            "problem": problem.to_dict()
+        }
+
+        return render_template("user/problem.html", **data)
+    
+    except Exception as err:
+        print(f"Error fetching user data: {err}")
+    
+    return "Error handling (not done yet)..."
 
 
 @problem_api.route("/<problemid>/submit", methods=["GET", "POST"])
@@ -91,7 +119,7 @@ def submit(problemid):
         session.close()
 
         return {
-            "redirectUrl": url_for("course_api.submissions", userid=userid, courseid=courseid),
+            "redirectUrl": url_for("submission_api.submissions", userid=userid, courseid=courseid),
             "success": True,
         }
 
