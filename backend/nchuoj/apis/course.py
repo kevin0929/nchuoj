@@ -43,38 +43,3 @@ def index(userid):
         print(f"Error fetching user data: {err}")
     
     return "Error handling (not done yet)..."
-
-
-@course_api.route("/<userid>/<courseid>/submissions", methods=["GET"])
-@jwt_required()
-def submissions(userid, courseid):
-    try:
-        session = get_orm_session()
-        user, course = get_user_course(userid, courseid)
-        submissions = (
-            session.query(Submission, Problem)
-            .join(Problem, Submission.problemid == Problem.problemid)
-            .filter(Submission.userid == userid)
-            .all()
-        )
-
-        submission_data = [
-            {
-                "submission": submission.to_dict(),
-                "problem": problem.to_dict()
-            }
-            for submission, problem in submissions
-        ]
-        
-        data = {
-            "user": user.to_dict(),
-            "course": course.to_dict(),
-            "submissions": submission_data[::-1]
-        }
-
-        return render_template("user/submissions.html", **data)
-
-    except Exception as err:
-        print(f"Error fetching user data: {err}")
-
-    return "Error handling (not done yet)..."

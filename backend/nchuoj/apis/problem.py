@@ -15,7 +15,7 @@ from model.problem import Problem
 from model.submission import Submission
 from model.testcase import Testcase
 from model.utils.db import *
-from service.submit import SubmitService
+from service.submit_service import SubmitService
 
 
 __all__ = ["problem_api", ]

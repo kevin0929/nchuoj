@@ -40,7 +40,7 @@
                     </li>
                     {% if user.role == 'admin' %}
                         <li>
-                            <a href="#" class="block flex flex-col items-center p-4 bg-amber-800 rounded-lg hover:bg-amber-700 transition duration-200">
+                            <a href="{{ url_for('user_api.admin_index', userid=user.userid) }}" class="block flex flex-col items-center p-4 bg-amber-800 rounded-lg hover:bg-amber-700 transition duration-200">
                                 <img src="{{ url_for('static', filename='img/admin_white.png') }}" alt="Admin Icon" class="w-12 h-12">
                                 <span class="text-white text-sm mt-3">ADMIN</span>
                             </a>
