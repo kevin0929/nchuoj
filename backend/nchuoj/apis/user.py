@@ -43,7 +43,7 @@ def admin_index(userid):
     try:
         session = get_orm_session()
         me = session.query(User).filter_by(userid=userid).first()
-        users = session.query(User).all()
+        users = session.query(User).order_by(User.userid).all()
 
         data = {
             "user": me.to_dict(),
@@ -63,14 +63,59 @@ def admin_index(userid):
 def import_user():
     '''import csv file to create user in batches
     '''
+    userid = get_jwt_identity()
+
     try:
         file = request.files.get("file")
+        ImportService.import_user_by_csv(file)
 
-        import_service = ImportService()
-        import_service.import_user_by_csv(file)
+        return jsonify({
+            "redirectUrl": url_for("user_api.admin_index", userid=userid),
+            "success": True,
+        })
 
     except Exception as err:
         print(f"Error fetching user data: {err}")
 
-    return jsonify({"msg": "yes", "success": True})
+    return jsonify({
+        "redirectUrl": url_for("user_api.admin_index", userid=userid),
+        "success": False
+    })
+
+
+@user_api.route("/add", methods=["GET", "POST"])
+@jwt_required()
+def add():
+    '''add user by form format
+    '''
+    userid = get_jwt_identity()
+
+    try:
+        username = request.form.get("username")
+        password = request.form.get("password")
+        email = request.form.get("email")
+        full_name = request.form.get("fullname")
+        role = request.form.get("role")
+
+        # add user
+        ImportService.add_user(
+            username=username,
+            password=password,
+            email=email,
+            role=role,
+            full_name=full_name
+        )
+
+        return jsonify({
+            "redirectUrl": url_for("user_api.admin_index", userid=userid),
+            "success": True
+        })
+
+    except Exception as err:
+        print(f"Error fetching user data: {err}")
+    
+    return jsonify({
+            "redirectUrl": url_for("user_api.admin_index", userid=userid),
+            "success": False
+        })
 

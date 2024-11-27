@@ -1,3 +1,5 @@
+import hashlib
+
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_jwt_extended import (
     JWTManager, create_access_token, jwt_required, get_jwt_identity, set_access_cookies, unset_jwt_cookies
@@ -33,12 +35,10 @@ def login():
                 flash("Invalid username or password.", "error")
                 return redirect(url_for("login_page"))
 
-            '''
-            TODO:
-                1. password need to be hashed
-            '''
+            # hash password
+            hash_passwd = hashlib.sha256(password.encode("utf-8")).hexdigest()[:32]
 
-            if password == user.password:
+            if hash_passwd == user.password:
                 # generate user's jwt and store it into Cookie
                 access_token = create_access_token(identity=user.userid)
                 response = redirect(url_for("user_api.index", userid=user.userid))

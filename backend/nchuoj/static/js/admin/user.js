@@ -174,7 +174,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
-    // Post input file to route
+    // Post CSV file to route "/user/import"
     document.getElementById("import-csv-form").addEventListener("submit", async(e) => {
         e.preventDefault();     // prevent default action
         const fileInput = document.getElementById("csv-file").files[0];
@@ -197,10 +197,53 @@ document.addEventListener("DOMContentLoaded", () => {
             });
 
             const result = await response.json();
-            if (response.success) {
+            if (result.success) {
                 alert("上傳成功!");
+                // importCsvModal.classList.add('hidden');
                 window.location.href = result.redirectUrl;
-                submitModal.classList.add('hidden');
+            } else {
+                alert("上傳失敗：" + result.msg);
+            }
+        } catch (error) {
+            console.log(error);
+            alert("上傳失敗，請稍後再試！");
+        }
+    })
+
+    // Post add user form to route "/user/add"
+    document.getElementById("add-user-form").addEventListener("submit", async(e) => {
+        e.preventDefault();
+
+        const username = document.getElementById("add-username").value;
+        const password = document.getElementById("add-password").value;
+        const email = document.getElementById("add-email").value;
+        const fullname = document.getElementById("add-fullname").value;
+        const role = document.getElementById("add-role").value;
+
+        // generate form data
+        const formData = new FormData();
+        formData.append("username", username);
+        formData.append("password", password);
+        formData.append("email", email);
+        formData.append("fullname", fullname);
+        formData.append("role", role);
+
+        console.log(formData);
+
+        try {
+            const response = await fetch("/user/add", {
+                method: "POST",
+                headers: {
+                    'X-CSRF-TOKEN': getCookie('csrf_access_token')
+                },
+                body: formData,
+            });
+
+            const result = await response.json();
+            if (result.success) {
+                alert("上傳成功!");
+                addUserModal.classList.add('hidden');
+                window.location.href = result.redirectUrl;
             } else {
                 alert("上傳失敗：" + result.msg);
             }
