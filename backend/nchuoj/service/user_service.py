@@ -5,7 +5,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from model.user import User
 from model.utils.db import *
 
-class ImportService:
+class UserService:
     @staticmethod
     def hash_passwd(password: str) -> str:
         return hashlib.sha256(password.encode("utf-8")).hexdigest()[:32]
@@ -36,7 +36,7 @@ class ImportService:
                 # necessary columns are username, password, email, role
                 new_user = User(
                     username=row["username"],
-                    password=ImportService.hash_passwd(row["password"]),
+                    password=UserService.hash_passwd(row["password"]),
                     email=row.get("email") if pd.notna(row.get("email")) else None,
                     role=row["role"],
                     full_name=row.get("full_name") if pd.notna(row.get("full_name")) else None,
@@ -82,7 +82,7 @@ class ImportService:
 
             new_user = User(
                 username=username,
-                password=ImportService.hash_passwd(password),
+                password=UserService.hash_passwd(password),
                 email=email,
                 role=role,
                 full_name=full_name,
@@ -95,6 +95,35 @@ class ImportService:
             )
 
             session.add(new_user)
+            session.commit()
+
+        except SQLAlchemyError as err:
+            session.rollback()
+            print(f"Database error occured: {err}")
+        finally:
+            session.close()
+
+    
+    @staticmethod
+    def edit(
+        userid: int,
+        username: str,
+        password: str,
+        email: str,
+        role: str
+    ):
+        try:
+            session = get_orm_session()
+
+            # update user's new information
+            user = session.query(User).filter_by(userid=userid).first()
+            user.username = username
+            if password:
+                password = UserService.hash_passwd(password)
+                user.password = password
+            user.email = email
+            user.role = role
+
             session.commit()
 
         except SQLAlchemyError as err:

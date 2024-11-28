@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block extrahead %}
-    ,<script src="{{ url_for('static', filename='js/admin/user.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/admin/user.js') }}"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 {% endblock extrahead %}
 
 {% block title %} Admin - User Management {% endblock title %}
@@ -74,6 +75,10 @@
                 <input type="text" id="edit-username" class="w-full p-2 border rounded">
             </div>
             <div class="mb-4">
+                <label for="edit-password" class="block text-gray-600 font-medium">Password</label>
+                <input type="text" id="edit-password" class="w-full p-2 border rounded">
+            </div>
+            <div class="mb-4">
                 <label for="edit-email" class="block text-gray-600 font-medium">Email</label>
                 <input type="email" id="edit-email" class="w-full p-2 border rounded">
             </div>
@@ -81,6 +86,8 @@
                 <label for="edit-role" class="block text-gray-600 font-medium">Role</label>
                 <select id="edit-role" class="w-full p-2 border rounded">
                     <option value="admin">Admin</option>
+                    <option value="teacher">Teacher</option>
+                    <option value="TA">TA</option>
                     <option value="user">User</option>
                 </select>
             </div>
@@ -134,6 +141,8 @@
                 <label for="add-role" class="block text-gray-600 font-medium">Role</label>
                 <select id="add-role" name="role" class="w-full p-2 border rounded">
                     <option value="admin">Admin</option>
+                    <option value="teacher">Teacher</option>
+                    <option value="TA">TA</option>
                     <option value="user">User</option>
                 </select>
             </div>

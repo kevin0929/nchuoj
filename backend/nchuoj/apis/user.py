@@ -5,7 +5,7 @@ from flask_jwt_extended import (
 
 from model.user import User
 from model.utils.db import get_orm_session
-from service.import_service import ImportService
+from service.user_service import UserService
 
 
 __all__ = ["user_api"]
@@ -67,7 +67,7 @@ def import_user():
 
     try:
         file = request.files.get("file")
-        ImportService.import_user_by_csv(file)
+        UserService.import_user_by_csv(file)
 
         return jsonify({
             "redirectUrl": url_for("user_api.admin_index", userid=userid),
@@ -98,7 +98,7 @@ def add():
         role = request.form.get("role")
 
         # add user
-        ImportService.add_user(
+        UserService.add_user(
             username=username,
             password=password,
             email=email,
@@ -115,7 +115,44 @@ def add():
         print(f"Error fetching user data: {err}")
     
     return jsonify({
-            "redirectUrl": url_for("user_api.admin_index", userid=userid),
-            "success": False
+        "redirectUrl": url_for("user_api.admin_index", userid=userid),
+        "success": False
+    })
+
+
+@user_api.route("/<userid>/edit", methods=["GET", "POST"])
+@jwt_required()
+def edit(userid):
+    '''edit user
+    '''
+    me = get_jwt_identity()
+
+    try:
+        username = request.form.get("username")
+        password = request.form.get("password")
+        email = request.form.get("email")
+        role = request.form.get("role")
+
+        print(username, password, email, role)
+
+        UserService.edit(
+            userid=userid,
+            username=username,
+            password=password,
+            email=email,
+            role=role
+        )
+
+        return jsonify({
+            "redirectUrl": url_for("user_api.admin_index", userid=me),
+            "success": True
         })
+
+    except Exception as err:
+        print(f"Error fetching user data: {err}")
+
+    return jsonify({
+        "redirectUrl": url_for("user_api.admin_index", userid=me),
+        "success": False
+    })
 

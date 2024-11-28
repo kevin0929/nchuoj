@@ -27,7 +27,7 @@ class User(Base):
     message = Column(String(100))
     
     # auth
-    role = Column(String(20), default="user")
+    role = Column(String(20), default="user")   # user, TA, teacher, admin
     is_activate = Column(Boolean, default=True)
 
     # statistic

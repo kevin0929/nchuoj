@@ -1,12 +1,10 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const usersData = JSON.parse(document.getElementById("users-data").dataset.users);
+    const users = JSON.parse(document.getElementById("users-data").dataset.users);
 
     // DOM Elements
     const tableBody = document.querySelector("table tbody");
-    const pagination = document.getElementById("pagination");
     const editUserModal = document.getElementById("edit-user-modal");
     const editUserForm = document.getElementById("edit-user-form");
-    const cancelEditButton = document.getElementById("cancel-edit");
     const editUidInput = document.getElementById("edit-uid");
     const editUsernameInput = document.getElementById("edit-username");
     const editEmailInput = document.getElementById("edit-email");
@@ -19,6 +17,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const addUserModal = document.getElementById("add-user-modal");
     const cancelImport = document.getElementById("cancel-import");
     const cancelAdd = document.getElementById("cancel-add");
+    const cancelEdit = document.getElementById("cancel-edit");
+
+    // For page partition
+    const perPage = 10;
+    let currentPage = 1;
 
     // Show Import CSV Modal
     importCsvBtn.addEventListener("click", () => {
@@ -30,6 +33,17 @@ document.addEventListener("DOMContentLoaded", () => {
         addUserModal.classList.remove("hidden");
     });
 
+    // Show Edit User Modal
+    function openEditModal(user) {
+        // Fill form information
+        editUidInput.value = user.userid;
+        editUsernameInput.value = user.username;
+        editEmailInput.value = user.email;
+        editRoleInput.value = user.role;
+    
+        editUserModal.classList.remove("hidden");
+    }
+
     // Close Modals
     cancelImport.addEventListener("click", () => {
         importCsvModal.classList.add("hidden");
@@ -39,132 +53,84 @@ document.addEventListener("DOMContentLoaded", () => {
         addUserModal.classList.add("hidden");
     });
 
-    // Prevent default form submission for testing purposes
-    document.getElementById("import-csv-form").addEventListener("submit", (e) => {
-        e.preventDefault();
-        alert("CSV uploaded!");
-        importCsvModal.classList.add("hidden");
-    });
-
-    document.getElementById("add-user-form").addEventListener("submit", (e) => {
-        e.preventDefault();
-        alert("User added!");
-        addUserModal.classList.add("hidden");
-    });
+    cancelEdit.addEventListener("click", () => {
+        editUserModal.classList.add("hidden");
+    })
 
     // Populate User Table
-    function populateTable(users) {
-        tableBody.innerHTML = ""; // Clear previous rows
-        users.forEach(user => {
-            const row = document.createElement("tr");
+    function renderTable(page) {
+        const tbody = document.querySelector("tbody");
+        tableBody.innerHTML = "";
 
-            row.innerHTML = `
+        const start = (page - 1) * perPage;
+        const end = start + perPage;
+        const pageData = users.slice(start, end);
+
+        pageData.forEach(user => {
+            const row = `
                 <tr class="border-b hover:bg-gray-100">
                     <td class="py-2 px-4">${user.userid}</td>
                     <td class="py-2 px-4">${user.username}</td>
                     <td class="py-2 px-4">${user.email}</td>
                     <td class="py-2 px-4">${user.role}</td>
                     <td class="py-2 px-4">
-                        <button data-uid="${user.userid}" class="edit-btn text-blue-600 hover:underline mr-2">Edit</button>
-                        <button data-uid="${user.userid}" class="delete-btn text-red-600 hover:underline">Delete</button>
+                        <button data-uid="${user.userid}" class="edit-btn text-blue-600 hover:underline mr-2">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button data-uid="${user.userid}" class="delete-btn text-red-600 hover:underline">
+                            <i class="fas fa-trash"></i>
+                        </button>
                     </td>
                 </tr>
             `;
 
-            tableBody.appendChild(row);
+            tbody.innerHTML += row;
         });
 
-        attachEventListeners(); // Attach event listeners for buttons
-    }
-
-    // Open Edit User Modal
-    function openEditModal(user) {
-        editUidInput.value = user.userid;
-        editUsernameInput.value = user.username;
-        editEmailInput.value = user.email;
-        editRoleInput.value = user.role;
-
-        editUserModal.classList.remove("hidden");
-    }
-
-    // Close Edit User Modal
-    function closeEditModal() {
-        editUserModal.classList.add("hidden");
-        editUserForm.reset();
-    }
-
-    // Handle Edit Button Click
-    function handleEditClick(e) {
-        const uid = e.target.dataset.userid;
-        const user = usersData.find(u => u.userid === uid);
-        if (user) {
-            openEditModal(user);
-        }
-    }
-
-    // Handle Delete Button Click
-    function handleDeleteClick(e) {
-        const uid = e.target.dataset.userid;
-        if (confirm(`Are you sure you want to delete user ${uid}?`)) {
-            // Optionally, remove the user from the table and usersData
-            const userIndex = usersData.findIndex(u => u.userid === uid);
-            if (userIndex > -1) {
-                usersData.splice(userIndex, 1);
-                populateTable(usersData);
-            }
-        }
-    }
-
-    // Handle Form Submit (Edit User)
-    editUserForm.addEventListener("submit", e => {
-        e.preventDefault();
-
-        const updatedUser = {
-            uid: editUidInput.value,
-            username: editUsernameInput.value,
-            email: editEmailInput.value,
-            role: editRoleInput.value
-        };
-
-        // Replace with an actual PATCH/PUT request to your API
-        console.log("User updated:", updatedUser);
-
-        // Update local usersData and re-render table
-        const userIndex = usersData.findIndex(u => u.userid === updatedUser.uid);
-        if (userIndex > -1) {
-            usersData[userIndex] = updatedUser;
-            populateTable(usersData);
-        }
-
-        closeEditModal();
-    });
-
-    // Attach Event Listeners to Buttons
-    function attachEventListeners() {
-        document.querySelectorAll(".edit-btn").forEach(btn => {
-            btn.addEventListener("click", handleEditClick);
+        // Combine btn to event (edit)
+        document.querySelectorAll(".edit-btn").forEach(button => {
+            button.addEventListener("click", (e) => {
+                const uid = e.currentTarget.dataset.uid;
+                const user = users.find(u => u.userid == uid);
+                openEditModal(user);
+            });
         });
 
-        document.querySelectorAll(".delete-btn").forEach(btn => {
-            btn.addEventListener("click", handleDeleteClick);
+        // Combine btn to event (delete)
+        document.querySelectorAll(".delete-btn").forEach(button => {
+            button.addEventListener("click", (e) => {
+                const uid = e.currentTarget.dataset.uid;
+                if (confirm(`Are you sure you want to delete user ${uid}?`)) {
+                    console.log("test");
+                }
+            });
         });
     }
 
-    // Pagination (Placeholder, can be enhanced)
-    function setupPagination() {
-        // Simple example for demonstration
-        pagination.innerHTML = `
-            <button class="px-3 py-1 border rounded bg-gray-200 hover:bg-gray-300">Previous</button>
-            <button class="px-3 py-1 border rounded bg-gray-200 hover:bg-gray-300">Next</button>
-        `;
+    function renderPagination(totalPages) {
+        const pagination = document.getElementById("pagination");
+        pagination.innerHTML = "";
+
+        for (let i=1;i<=totalPages;i++) {
+            const button = document.createElement("button");
+            button.textContent = i;
+            button.className = `px-4 py-2 ${i === currentPage ? "bg-blue-500 text-white" : "bg-gray-200 hover:bg-gray-300"} rounded`;
+            button.addEventListener("click", () => {
+                changePage(i);
+            });
+            pagination.appendChild(button);
+        }
     }
 
-    // Cancel Edit Modal
-    cancelEditButton.addEventListener("click", closeEditModal);
+    function changePage(page) {
+        currentPage = page;
+        renderTable(page);
+        renderPagination(Math.ceil(users.length / perPage));
+    }
 
-    // Initialize Table
-    populateTable(usersData);
-    setupPagination();
+    renderTable(currentPage);
+    renderPagination(Math.ceil(users.length / perPage));
+
 
     // Get cookie name function
     function getCookie(name) {
@@ -214,7 +180,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("add-user-form").addEventListener("submit", async(e) => {
         e.preventDefault();
 
-        const username = document.getElementById("add-username").value;
+        const username = document.getElementById("edit-username").value;
         const password = document.getElementById("add-password").value;
         const email = document.getElementById("add-email").value;
         const fullname = document.getElementById("add-fullname").value;
@@ -227,8 +193,6 @@ document.addEventListener("DOMContentLoaded", () => {
         formData.append("email", email);
         formData.append("fullname", fullname);
         formData.append("role", role);
-
-        console.log(formData);
 
         try {
             const response = await fetch("/user/add", {
@@ -246,6 +210,48 @@ document.addEventListener("DOMContentLoaded", () => {
                 window.location.href = result.redirectUrl;
             } else {
                 alert("上傳失敗：" + result.msg);
+            }
+        } catch (error) {
+            console.log(error);
+            alert("上傳失敗，請稍後再試！");
+        }
+    })
+
+    // Post edit user form to route "/user/<userid>/edit>"
+    document.getElementById("edit-user-form").addEventListener("submit", async(e) => {
+        e.preventDefault();
+
+        const userid = document.getElementById("edit-uid").value
+        const username = document.getElementById("edit-username").value;
+        const password = document.getElementById("edit-password").value;
+        const email = document.getElementById("edit-email").value;
+        const role = document.getElementById("edit-role").value;
+
+        // generate form data
+        const formData = new FormData();
+        formData.append("userid", userid);
+        formData.append("username", username);
+        formData.append("password", password);
+        formData.append("email", email);
+        formData.append("role", role);
+
+        const editUrl = `/user/${userid}/edit`;
+        try {
+            const response = await fetch(editUrl, {
+                method: "POST",
+                headers: {
+                    'X-CSRF-TOKEN': getCookie('csrf_access_token')
+                },
+                body: formData,
+            });
+
+            const result = await response.json();
+            if (result.success) {
+                alert("更改成功!");
+                addUserModal.classList.add('hidden');
+                window.location.href = result.redirectUrl;
+            } else {
+                alert("更改失敗：" + result.msg);
             }
         } catch (error) {
             console.log(error);
