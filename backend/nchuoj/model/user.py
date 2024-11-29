@@ -9,6 +9,7 @@ from sqlalchemy import (
     DateTime,
     Float
 )
+from sqlalchemy.orm import relationship
 
 
 __all__ = ["User", ]
@@ -35,6 +36,9 @@ class User(Base):
     accepted_count = Column(Integer, default=0)
     rating = Column(Integer, default=1500)
     rank = Column(Integer, nullable=True)   # nullable to handle new user
+
+    # delete user, also delete all relation about it
+    course_users = relationship("CourseUser", cascade="all, delete-orphan", backref="user")
 
 
     def to_dict(self):

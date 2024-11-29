@@ -131,3 +131,24 @@ class UserService:
             print(f"Database error occured: {err}")
         finally:
             session.close()
+
+    
+    @staticmethod
+    def delete(
+        userid: int
+    ):
+        try:
+            session = get_orm_session()
+
+            # delete user and it's information in other relation table
+            user = session.query(User).filter_by(userid=userid).first()
+
+            if user:
+                session.delete(user)
+                session.commit()
+
+        except SQLAlchemyError as err:
+            session.rollback()
+            print(f"Database error occured: {err}")
+        finally:
+            session.close()

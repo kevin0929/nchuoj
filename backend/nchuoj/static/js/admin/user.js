@@ -101,7 +101,7 @@ document.addEventListener("DOMContentLoaded", () => {
             button.addEventListener("click", (e) => {
                 const uid = e.currentTarget.dataset.uid;
                 if (confirm(`Are you sure you want to delete user ${uid}?`)) {
-                    console.log("test");
+                    deleteUser(uid);
                 }
             });
         });
@@ -235,9 +235,9 @@ document.addEventListener("DOMContentLoaded", () => {
         formData.append("email", email);
         formData.append("role", role);
 
-        const editUrl = `/user/${userid}/edit`;
+        const editUserUrl = `/user/${userid}/edit`;
         try {
-            const response = await fetch(editUrl, {
+            const response = await fetch(editUserUrl, {
                 method: "POST",
                 headers: {
                     'X-CSRF-TOKEN': getCookie('csrf_access_token')
@@ -248,7 +248,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const result = await response.json();
             if (result.success) {
                 alert("更改成功!");
-                addUserModal.classList.add('hidden');
+                editUserModal.classList.add('hidden');
                 window.location.href = result.redirectUrl;
             } else {
                 alert("更改失敗：" + result.msg);
@@ -258,4 +258,29 @@ document.addEventListener("DOMContentLoaded", () => {
             alert("上傳失敗，請稍後再試！");
         }
     })
+
+    // If confirm, post userid to route "/user/<userid>/delete"
+    async function deleteUser(userid) {
+        const deleteUserUrl = `/user/${userid}`;
+
+        try {
+            const response = await fetch(deleteUserUrl, {
+                method: "DELETE",
+                headers: {
+                    'X-CSRF-TOKEN': getCookie('csrf_access_token')
+                }
+            });
+
+            const result = await response.json();
+            if (result.success) {
+                alert("刪除成功!");
+                window.location.href = result.redirectUrl;
+            } else {
+                alert("刪除失敗：" + result.msg);
+            }
+        } catch (error) {
+            console.log(error);
+            alert("刪除失敗，請稍後再試！");
+        }
+    }
 });

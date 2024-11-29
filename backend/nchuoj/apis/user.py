@@ -133,8 +133,6 @@ def edit(userid):
         email = request.form.get("email")
         role = request.form.get("role")
 
-        print(username, password, email, role)
-
         UserService.edit(
             userid=userid,
             username=username,
@@ -156,3 +154,26 @@ def edit(userid):
         "success": False
     })
 
+
+@user_api.route("/<int:userid>", methods=["DELETE"])
+@jwt_required()
+def delete(userid):
+    '''delete user
+    '''
+    me = get_jwt_identity()
+
+    try:
+        UserService.delete(userid=userid)
+
+        return jsonify({
+            "redirectUrl": url_for("user_api.admin_index", userid=me),
+            "success": True
+        })
+
+    except Exception as err:
+        print(f"Error fetching user data: {err}")
+
+    return jsonify({
+        "redirectUrl": url_for("user_api.admin_index", userid=me),
+        "success": False
+    })

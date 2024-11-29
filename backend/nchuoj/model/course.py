@@ -10,6 +10,8 @@ from sqlalchemy import (
     UniqueConstraint,
     ForeignKey,
 )
+from sqlalchemy.orm import relationship
+
 
 __all__ = ["Course", ]
 
@@ -29,6 +31,9 @@ class Course(Base):
     # time information
     start_date = Column(DateTime, nullable=True)
     end_date = Column(DateTime, nullable=True)
+
+    # relationship with courseuser
+    course_users = relationship("CourseUser", cascade="all, delete-orphan", backref="course")
 
 
     def to_dict(self):
