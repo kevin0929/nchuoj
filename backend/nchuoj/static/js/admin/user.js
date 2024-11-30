@@ -87,6 +87,11 @@ document.addEventListener("DOMContentLoaded", () => {
             tbody.innerHTML += row;
         });
 
+        /*
+            TODO : 
+                1. search user by username
+        */
+
         // Combine btn to event (edit)
         document.querySelectorAll(".edit-btn").forEach(button => {
             button.addEventListener("click", (e) => {
@@ -217,7 +222,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     })
 
-    // Post edit user form to route "/user/<userid>/edit>"
+    // Post edit user form to route "/user/<userid>/edit"
     document.getElementById("edit-user-form").addEventListener("submit", async(e) => {
         e.preventDefault();
 

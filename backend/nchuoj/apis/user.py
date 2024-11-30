@@ -91,11 +91,12 @@ def add():
     userid = get_jwt_identity()
 
     try:
-        username = request.form.get("username")
-        password = request.form.get("password")
-        email = request.form.get("email")
-        full_name = request.form.get("fullname")
-        role = request.form.get("role")
+        if request:
+            username = request.form.get("username")
+            password = request.form.get("password")
+            email = request.form.get("email")
+            full_name = request.form.get("fullname")
+            role = request.form.get("role")
 
         # add user
         UserService.add_user(
@@ -133,7 +134,7 @@ def edit(userid):
         email = request.form.get("email")
         role = request.form.get("role")
 
-        UserService.edit(
+        UserService.edit_user(
             userid=userid,
             username=username,
             password=password,
@@ -163,7 +164,7 @@ def delete(userid):
     me = get_jwt_identity()
 
     try:
-        UserService.delete(userid=userid)
+        UserService.delete_user(userid=userid)
 
         return jsonify({
             "redirectUrl": url_for("user_api.admin_index", userid=me),

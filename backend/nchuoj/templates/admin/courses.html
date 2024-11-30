@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% block extrahead %}
+    <script src="{{ url_for('static', filename='js/admin/course.js') }}"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+{% endblock extrahead %}
+
+{% block title %} Admin - Course Management {% endblock title %}
+
+{% block content %}
+<div class="w-full p-6">
+
+    <!-- Breadcrumb Navigation -->
+    <nav class="text-sm text-black mb-6">
+        <a href="#" class="hover:text-blue-600">Admin</a> &gt; 
+        <a href="#" class="hover:text-blue-600">Course Management</a>
+        <hr class="h-px my-3 bg-gray-500 border-0 dark:bg-gray-700">
+    </nav>
+
+    <!-- Main Content Area -->
+    <div class="flex w-full">
+
+        <!-- Left Sidebar (Menu) -->
+        <aside class="w-1/5 bg-gray-100 p-6 mr-6 rounded-lg shadow">
+            <ul class="space-y-6">
+                <li>
+                    <a href="{{ url_for('user_api.admin_index', userid=user.userid) }}" class="block text-gray-700 hover:text-blue-600 font-medium">User Management</a>
+                </li>
+                <li>
+                    <a href="{{ url_for('course_api.admin_index', userid=user.userid) }}" class="block text-gray-700 hover:text-blue-600 font-medium">Course Management</a>
+                </li>
+            </ul>
+        </aside>
+
+        <!-- Right Content Area -->
+        <div class="w-4/5 bg-white p-8 rounded-lg shadow">
+            <div class="flex justify-start items-center mb-4 space-x-4">
+                <button id="add-course-btn" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Add Course</button>
+            </div>
+
+            <!-- User Management Table -->
+            <table class="min-w-full bg-white border-collapse">
+                <thead>
+                    <tr>
+                        <th class="py-2 px-4 bg-gray-200 text-left font-bold text-gray-600">CID</th>
+                        <th class="py-2 px-4 bg-gray-200 text-left font-bold text-gray-600">Course Name</th>
+                        <th class="py-2 px-4 bg-gray-200 text-left font-bold text-gray-600">Teacher</th>
+                        <th class="py-2 px-4 bg-gray-200 text-left font-bold text-gray-600">Start</th>
+                        <th class="py-2 px-4 bg-gray-200 text-left font-bold text-gray-600">End</th>
+                        <th class="py-2 px-4 bg-gray-200 text-left font-bold text-gray-600">Is activate</th>
+                        <th class="py-2 px-4 bg-gray-200 text-left font-bold text-gray-600">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- JS will dynamically populate rows -->
+                </tbody>
+            </table>
+            <div id="pagination" class="mt-6 flex justify-center space-x-2"></div>
+            <div id="courses-data" data-courses='{{ courses|tojson }}'></div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Course Modal -->
+<div id="add-course-modal" class="hidden fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-800 bg-opacity-50">
+    <div class="bg-white p-6 rounded-lg shadow-md w-1/3">
+        <h2 class="text-xl font-bold mb-4">Add Course</h2>
+        <form id="add-course-form">
+            <div class="mb-4">
+                <label for="add-course-name" class="block text-gray-600 font-medium">Course Name</label>
+                <input type="text" id="add-course-name" name="course_name" class="w-full p-2 border rounded">
+            </div>
+            <div class="mb-4">
+                <label for="add-course-teacher" class="block text-gray-600 font-medium">Teacher</label>
+                <input type="text" id="add-course-teacher" name="course_teacher" class="w-full p-2 border rounded">
+            </div>
+            <div class="mb-4">
+                <label for="add-course-start-date" class="block text-gray-600 font-medium">Start</label>
+                <input type="datetime-local" id="add-course-start-date" name="start_date" class="w-full p-2 border rounded"></textarea>
+            </div>
+            <div class="mb-4">
+                <label for="add-course-end-date" class="block text-gray-600 font-medium">End</label>
+                <input type="datetime-local" id="add-course-end-date" name="end_date" class="w-full p-2 border rounded">
+            </div>
+            <div class="mb-4">
+                <label for="add-course-is-activate" class="block text-gray-600 font-medium">Is activate</label>
+                <select id="add-course-is-activate" name="is_activate" class="w-full p-2 border rounded">
+                    <option value="true">true</option>
+                    <option value="false">false</option>
+                </select>
+            </div>
+            <div class="flex justify-end">
+                <button type="button" id="cancel-add" class="bg-gray-500 text-white px-4 py-2 rounded mr-2">Cancel</button>
+                <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Add</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+{% endblock content %}

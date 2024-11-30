@@ -48,7 +48,7 @@ def homework(userid, courseid, homeworkid):
         session = get_orm_session()
         user, course = get_user_course(userid, courseid)
         homework = session.query(Homework).filter_by(homeworkid=homeworkid).first()
-        problems = session.query(Problem).filter_by(homeworkid=homeworkid).all()
+        problems = session.query(Problem).filter_by(homeworkid=homeworkid).order_by(Problem.problemid).all()
 
         data = {
             "user": user.to_dict(),

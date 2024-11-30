@@ -16,7 +16,7 @@
         <tbody class="bg-white">
             {% for course in courses %}
             <tr class="hover:bg-gray-100 transition duration-200 cursor-pointer"
-                onclick="window.location.href='{{ url_for('announcement_api.announcement', userid=user.userid, courseid=course.courseid) }}'">
+                onclick="window.location.href='{{ url_for('homework_api.homeworks', userid=user.userid, courseid=course.courseid) }}'">
                 <td class="p-4 border-b border-gray-200">{{ course.courseid }}</td>
                 <td class="p-4 border-b border-gray-200">{{ course.coursename }}</td>
                 <td class="p-4 border-b border-gray-200">{{ course.teacher }}</td>

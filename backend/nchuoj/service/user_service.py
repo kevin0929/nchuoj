@@ -5,6 +5,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from model.user import User
 from model.utils.db import *
 
+
 class UserService:
     @staticmethod
     def hash_passwd(password: str) -> str:
@@ -94,8 +95,9 @@ class UserService:
                 rank=None,
             )
 
-            session.add(new_user)
-            session.commit()
+            if new_user:
+                session.add(new_user)
+                session.commit()
 
         except SQLAlchemyError as err:
             session.rollback()
@@ -105,7 +107,7 @@ class UserService:
 
     
     @staticmethod
-    def edit(
+    def edit_user(
         userid: int,
         username: str,
         password: str,
@@ -134,7 +136,7 @@ class UserService:
 
     
     @staticmethod
-    def delete(
+    def delete_user(
         userid: int
     ):
         try:
