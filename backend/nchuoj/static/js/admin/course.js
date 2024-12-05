@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
     const courses = JSON.parse(document.getElementById("courses-data").dataset.courses);
+    const userid = document.getElementById("userid-data").dataset.userid;
 
     // DOM element
     const addCourseBtn = document.getElementById("add-course-btn");
@@ -43,6 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
         pageData.forEach(course => {
             const startDateFormatted = formatDate(course.start_date);
             const endDateFormatted = formatDate(course.end_date);
+            const editUrl = `/course/${userid}/admin/${course.courseid}/edit`
             const row = `
                 <tr class="border-b hover:bg-gray-100">
                     <td class="py-2 px-4">${course.courseid}</td>
@@ -52,7 +54,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     <td class="py-2 px-4">${endDateFormatted}</td>
                     <td class="py-2 px-4">${course.is_activate}</td>
                     <td class="py-2 px-4">
-                        <button data-cid="${course.courseid}" class="edit-btn text-blue-600 hover:underline mr-2">
+                        <button data-cid="${course.courseid}" class="edit-btn text-blue-600 hover:underline mr-2"
+                            onclick="window.location.href='${editUrl}'">
                             <i class="fas fa-edit"></i>
                         </button>
                         <button data-cid="${course.courseid}" class="delete-btn text-red-600 hover:underline">

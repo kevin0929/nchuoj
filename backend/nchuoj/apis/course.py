@@ -122,3 +122,28 @@ def delete(courseid):
         print(f"Error fetching user data: {err}")
 
     return redirect(url_for("login_page"))
+
+
+@course_api.route("/<userid>/admin/<courseid>/edit")
+@jwt_required()
+def edit(userid, courseid):
+    '''course edit page in course management
+    '''
+    me = get_jwt_identity()
+
+    try:
+        user, course = get_user_course(userid, courseid)
+        print(user.to_dict())
+        print(course.to_dict())
+
+        data = {
+            "user": user.to_dict(),
+            "course": course.to_dict()
+        }
+
+        return render_template("/admin/course.html", **data)
+
+    except Exception as err:
+        print(f"Error fetching user data: {err}")
+
+    return redirect(url_for("login_page"))
