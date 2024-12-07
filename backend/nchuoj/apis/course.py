@@ -133,8 +133,6 @@ def edit(userid, courseid):
 
     try:
         user, course = get_user_course(userid, courseid)
-        print(user.to_dict())
-        print(course.to_dict())
 
         data = {
             "user": user.to_dict(),

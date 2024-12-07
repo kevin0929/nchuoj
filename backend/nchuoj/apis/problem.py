@@ -50,6 +50,20 @@ def problem(userid, courseid, homeworkid, problemid):
     return "Error handling (not done yet)..."
 
 
+@problem_api.route("/<userid>/admin/<courseid>/homework/<homeworkid>/problems")
+@jwt_required()
+def admin_problems(userid: int, courseid: int, homeworkid: int):
+    '''
+    '''
+    try:
+        pass
+    
+    except Exception as err:
+        print(f"Occur error: {err}")
+
+    return "Error handling (not done yet)..."
+
+
 @problem_api.route("/<problemid>/submit", methods=["GET", "POST"])
 @jwt_required()
 def submit(problemid): 

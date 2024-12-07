@@ -1,9 +1,10 @@
 {% extends "base.html" %}
 {% block extrahead %}
+    <script src="{{ url_for('static', filename='js/admin/homework.js') }}"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 {% endblock extrahead %}
 
-{% block title %} Admin - Course {% endblock title %}
+{% block title %} Admin - Homework {% endblock title %}
 
 {% block content %}
 <div class="w-full p-6">
@@ -22,16 +23,10 @@
         <aside class="w-1/5 bg-gray-100 p-6 mr-6 rounded-lg shadow">
             <ul class="space-y-6">
                 <li>
-                    <a href="#" class="block text-gray-700 hover:text-blue-600 font-medium">Overview</a>
+                    <a href="{{ url_for('homework_api.edit', userid=user.userid, courseid=course.courseid, homeworkid=homework.homeworkid) }}" class="block text-gray-700 hover:text-blue-600 font-medium">Overview</a>
                 </li>
                 <li>
-                    <a href="{{ url_for('homework_api.admin_homeworks', userid=user.userid, courseid=course.courseid) }}" class="block text-gray-700 hover:text-blue-600 font-medium">Homeworks</a>
-                </li>
-                <li>
-                    <a href="#" class="block text-gray-700 hover:text-blue-600 font-medium">Announcements</a>
-                </li>
-                <li>
-                    <a href="#" class="block text-gray-700 hover:text-blue-600 font-medium">Participants</a>
+                    <a href="#" class="block text-gray-700 hover:text-blue-600 font-medium">Problems</a>
                 </li>
             </ul>
         </aside>
@@ -39,7 +34,7 @@
         <!-- Right Content Area -->
         <div class="w-4/5 bg-white p-8 rounded-lg shadow">
             <!-- Go Back -->
-            <a href="{{ url_for('course_api.admin_index', userid=user.userid, courseid=course.courseid) }}" 
+            <a href="{{ url_for('homework_api.admin_homeworks', userid=user.userid, courseid=course.courseid) }}" 
                 class="flex items-center mb-6 text-blue-500 hover:text-blue-700">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
@@ -49,33 +44,21 @@
 
             <!-- Form Header -->
             <div class="mb-6">
-                <h2 class="text-2xl font-semibold text-gray-800">Edit Course Details</h2>
-                <p class="text-sm text-gray-500">Update the course name, teacher, and description below.</p>
+                <h2 class="text-2xl font-semibold text-gray-800">Edit Homework Details</h2>
+                <p class="text-sm text-gray-500">Update the homework name, and description below.</p>
             </div>
 
             <!-- Edit Course Form -->
             <form action="#" method="POST" class="space-y-6">
                 <!-- Course Name -->
                 <div>
-                    <label for="coursename" class="block text-sm font-medium text-gray-700">Course Name</label>
+                    <label for="coursename" class="block text-sm font-medium text-gray-700">Homework Name</label>
                     <input 
                         type="text" 
-                        id="coursename" 
-                        name="coursename" 
-                        value="{{ course.coursename }}" 
-                        placeholder="Enter course name"
-                        class="mt-2 block w-full rounded-lg border border-gray-300 bg-gray-50 p-3 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50 transition duration-300">
-                </div>
-
-                <!-- Teacher Name -->
-                <div>
-                    <label for="teacher" class="block text-sm font-medium text-gray-700">Teacher</label>
-                    <input 
-                        type="text" 
-                        id="teacher" 
-                        name="teacher" 
-                        value="{{ course.teacher }}" 
-                        placeholder="Enter teacher's name"
+                        id="homeworkname" 
+                        name="homeworkname" 
+                        value="{{ homework.name }}" 
+                        placeholder="Enter homework name"
                         class="mt-2 block w-full rounded-lg border border-gray-300 bg-gray-50 p-3 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50 transition duration-300">
                 </div>
 
@@ -86,8 +69,30 @@
                         id="description" 
                         name="description" 
                         rows="5" 
-                        placeholder="Write a brief description of the course..."
-                        class="mt-2 block w-full rounded-lg border border-gray-300 bg-gray-50 p-3 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50 transition duration-300">{{ course.description }}</textarea>
+                        placeholder="Write a brief description of the homework..."
+                        class="mt-2 block w-full rounded-lg border border-gray-300 bg-gray-50 p-3 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50 transition duration-300">{{ homework.description }}</textarea>
+                </div>
+
+                <!-- Start date -->
+                <div class="mb-4">
+                    <label for="start-date" class="block text-sm font-medium text-gray-700">Start</label>
+                    <input 
+                        type="datetime-local" 
+                        id="start-date" 
+                        name="start_date" 
+                        value="{{ homework.start_date|replace(' ', 'T') if homework.start_date else '' }}" 
+                        class="mt-2 w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300">
+                </div>
+
+                <!-- End date -->
+                <div class="mb-4">
+                    <label for="end-date" class="block text-sm font-medium text-gray-700">End</label>
+                    <input 
+                        type="datetime-local" 
+                        id="end-date" 
+                        name="end_date" 
+                        value="{{ homework.end_date|replace(' ', 'T') if homework.end_date else '' }}" 
+                        class="mt-2 w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300">
                 </div>
 
                 <!-- Submit Button -->
@@ -100,7 +105,6 @@
                 </div>
             </form>
         </div>
-
     </div>
 </div>
 
