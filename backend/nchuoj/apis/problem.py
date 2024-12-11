@@ -56,12 +56,32 @@ def admin_problems(userid: int, courseid: int, homeworkid: int):
     '''
     '''
     try:
-        pass
+        session = get_orm_session()
+        user, course = get_user_course(userid, courseid)
+        homework = session.query(Homework).filter(Homework.homeworkid == homeworkid).first()
+        problems = session.query(Problem).filter(Problem.homeworkid == homeworkid).all()
+
+        data = {
+            "user": user.to_dict(),
+            "course": course.to_dict(),
+            "homework": homework.to_dict(),
+            "problems": [problem.to_dict() for problem in problems]
+        }
+
+        return render_template("admin/problems.html", **data)
     
     except Exception as err:
         print(f"Occur error: {err}")
 
     return "Error handling (not done yet)..."
+
+
+@problem_api.route("/<userid>/admin/<courseid>/homework/<homeworkid>/add")
+@jwt_required()
+def add(userid: int, courseid: int, homeworkid: int):
+    '''add problem into homework
+    '''
+    pass
 
 
 @problem_api.route("/<problemid>/submit", methods=["GET", "POST"])
