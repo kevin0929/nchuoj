@@ -54,6 +54,7 @@
                         <th class="py-2 px-4 bg-gray-200 text-left font-bold text-gray-600">PID</th>
                         <th class="py-2 px-4 bg-gray-200 text-left font-bold text-gray-600">Problem Name</th>
                         <th class="py-2 px-4 bg-gray-200 text-left font-bold text-gray-600">Tag</th>
+                        <th class="py-2 px-4 bg-gray-200 text-left font-bold text-gray-600">Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -61,7 +62,8 @@
                 </tbody>
             </table>
             <div id="pagination" class="mt-6 flex justify-center space-x-2"></div>
-            <div id="homeworks-data" data-homeworks='{{ homeworks|tojson }}'></div>
+            <div id="problems-data" data-problems='{{ problems|tojson }}'></div>
+            <div id="homeworkid-data" data-homeworkid='{{ homework.homeworkid }}'></div>
             <div id="userid-data" data-userid='{{ user.userid }}'></div>
             <div id="courseid-data" data-courseid='{{ course.courseid }}'></div>
         </div>

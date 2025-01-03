@@ -1,48 +1,35 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const homeworks = JSON.parse(document.getElementById("homeworks-data").dataset.homeworks);
+    const problems = JSON.parse(document.getElementById("problems-data").dataset.problems);
+    const homeworkid = document.getElementById("homeworkid-data").dataset.homeworkid;
     const userid = document.getElementById("userid-data").dataset.userid;
     const courseid = document.getElementById("courseid-data").dataset.courseid;
 
     const perPage = 10;
     const currentPage = 1;
 
-
-    function formatDate(dateString) {
-        const date = new Date(dateString);
-        return date.toLocaleString("zh-TW", {
-            year: "numeric",
-            month: "2-digit",
-            day: "2-digit",
-            hour: "2-digit",
-            minute: "2-digit",
-        });
-    }
     
-    // Partition Course Table
+    // Partition Problem Table
     function renderTable(page) {
         const tbody = document.querySelector("tbody");
         tbody.innerHTML = "";
 
         const start = (page - 1) * perPage;
         const end = start + perPage;
-        const pageData = homeworks.slice(start, end);
+        const pageData = problems.slice(start, end);
 
-        pageData.forEach(homework => {
-            const startDateFormatted = formatDate(homework.start_date);
-            const endDateFormatted = formatDate(homework.end_date);
-            const editUrl = `/homework/${userid}/admin/${courseid}/homework/${homework.homeworkid}/edit`;
+        pageData.forEach(problem => {
+            const editUrl = `/problem/${userid}/admin/${courseid}/homework/${homeworkid}/${problem.problemid}/edit`;
             const row = `
                 <tr class="border-b hover:bg-gray-100">
-                    <td class="py-2 px-4">${homework.homeworkid}</td>
-                    <td class="py-2 px-4">${homework.name}</td>
-                    <td class="py-2 px-4">${startDateFormatted}</td>
-                    <td class="py-2 px-4">${endDateFormatted}</td>
+                    <td class="py-2 px-4">${problem.problemid}</td>
+                    <td class="py-2 px-4">${problem.name}</td>
+                    <td class="py-2 px-4">${problem.tag}</td>
                     <td class="py-2 px-4">
-                        <button data-hid="${homework.homeworkid}" class="edit-btn text-blue-600 hover:underline mr-2"
+                        <button data-hid="${problem.problemid}" class="edit-btn text-blue-600 hover:underline mr-2"
                             onclick="window.location.href='${editUrl}'">
                             <i class="fas fa-edit"></i>
                         </button>
-                        <button data-cid="${homework.homeworkid}" class="delete-btn text-red-600 hover:underline">
+                        <button data-cid="${problem.problemid}" class="delete-btn text-red-600 hover:underline">
                             <i class="fas fa-trash"></i>
                         </button>
                     </td>

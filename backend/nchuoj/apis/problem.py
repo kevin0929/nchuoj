@@ -84,6 +84,14 @@ def add(userid: int, courseid: int, homeworkid: int):
     pass
 
 
+@problem_api.route("/<userid>/admin/<courseid>/homework/<homeworkid>/<problemid>/edit")
+@jwt_required()
+def edit(userid: int, courseid: int, homeworkid: int):
+    '''edit problem
+    '''
+    pass
+
+
 @problem_api.route("/<problemid>/submit", methods=["GET", "POST"])
 @jwt_required()
 def submit(problemid): 
