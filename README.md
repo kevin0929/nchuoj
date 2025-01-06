@@ -10,9 +10,8 @@ A Judge System For National Chung Hsing University
 
 ### Set Up
 
-:::warning
-You may set up your own port-forwarding setting.
-:::
+⚠️ You may set up your own port-forwarding setting.
+
 
 ```
 sudo docker compose up -d
