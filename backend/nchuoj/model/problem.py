@@ -8,6 +8,7 @@ from sqlalchemy import (
     Boolean,
     ForeignKey,
 )
+from sqlalchemy.orm import relationship
 
 
 __all__ = ["Problem", ]
@@ -27,6 +28,10 @@ class Problem(Base):
 
     # auth
     is_show = Column(Boolean, nullable=False, server_default="true")
+
+    # relation
+    submissions = relationship("Submission", cascade="all, delete-orphan", backref="problem")
+    testcases = relationship("Testcase", cascade="all, delete-orphan", backref="problem")
 
 
     def to_dict(self):

@@ -25,11 +25,11 @@ document.addEventListener("DOMContentLoaded", () => {
                     <td class="py-2 px-4">${problem.name}</td>
                     <td class="py-2 px-4">${problem.tag}</td>
                     <td class="py-2 px-4">
-                        <button data-hid="${problem.problemid}" class="edit-btn text-blue-600 hover:underline mr-2"
+                        <button data-pid="${problem.problemid}" class="edit-btn text-blue-600 hover:underline mr-2"
                             onclick="window.location.href='${editUrl}'">
                             <i class="fas fa-edit"></i>
                         </button>
-                        <button data-cid="${problem.problemid}" class="delete-btn text-red-600 hover:underline">
+                        <button data-pid="${problem.problemid}" class="delete-btn text-red-600 hover:underline">
                             <i class="fas fa-trash"></i>
                         </button>
                     </td>
@@ -39,21 +39,14 @@ document.addEventListener("DOMContentLoaded", () => {
             tbody.innerHTML += row;
         });
 
-        // document.querySelectorAll(".edit-btn").forEach(button => {
-        //     button.addEventListener("click", (e) => {
-        //         const cid = e.currentTarget.dataset.cid;
-        //         const course = courses.find(c => c.courseid == cid);
-        //         openAModal(user);
-        //     });
-        // });
 
         // Combine btn to event (delete)
         document.querySelectorAll(".delete-btn").forEach(button => {
             button.addEventListener("click", (e) => {
-                const cid = e.currentTarget.dataset.cid;
-                const course = courses.find(c => c.courseid == cid);
-                if (confirm(`Are you sure you want to delete course : ${course.coursename}?`)) {
-                    deleteCourse(cid);
+                const pid = e.currentTarget.dataset.pid;
+                const problem = problems.find(p => p.problemid == pid);
+                if (confirm(`Are you sure you want to delete problem : ${problem.name}?`)) {
+                    deleteProblem(pid);
                 }
             });
         });
@@ -88,5 +81,29 @@ document.addEventListener("DOMContentLoaded", () => {
         const value = `; ${document.cookie}`;
         const parts = value.split(`; ${name}=`);
         if (parts.length === 2) return parts.pop().split(';').shift();
+    }
+
+    async function deleteProblem(problemid) {
+        var deleteProblemUrl = `/problem/${userid}/admin/${courseid}/homework/${homeworkid}/${problemid}`;
+
+        try {
+            const response = await fetch(deleteProblemUrl, {
+                method: "DELETE",
+                headers: {
+                    'X-CSRF-TOKEN': getCookie('csrf_access_token')
+                }
+            });
+
+            const result = await response.json();
+            if (result.success) {
+                alert("刪除成功!");
+                window.location.href = result.redirectUrl;
+            } else {
+                alert("刪除失敗：" + result.msg);
+            }
+        } catch (error) {
+            console.log(error);
+            alert("刪除失敗，請稍後再試！");
+        }
     }
 })

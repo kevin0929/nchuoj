@@ -15,6 +15,7 @@ from model.problem import Problem
 from model.submission import Submission
 from model.testcase import Testcase
 from model.utils.db import *
+from service.problem_service import ProblemService
 from service.submit_service import SubmitService
 
 
@@ -90,6 +91,40 @@ def edit(userid: int, courseid: int, homeworkid: int):
     '''edit problem
     '''
     pass
+
+
+@problem_api.route("/<userid>/admin/<courseid>/homework/<homeworkid>/<problemid>", methods=["delete"])
+@jwt_required()
+def delete(
+    userid: int,
+    courseid: int,
+    homeworkid: int,
+    problemid: int
+):
+    '''delete problem
+    '''
+    param = {
+        "userid": userid,
+        "courseid": courseid,
+        "homeworkid": homeworkid,
+    }
+
+    try:
+        ProblemService.delete_problem(problemid=problemid)
+
+        return jsonify({
+            "redirectUrl": url_for("problem_api.admin_problems", **param),
+            "success": True
+        })
+
+    except Exception as err:
+        print(f"Error fetching user data: {err}")
+
+    return jsonify({
+        "redirectUrl": url_for("problem_api.admin_problems", **param),
+        "success": False
+    })
+
 
 
 @problem_api.route("/<problemid>/submit", methods=["GET", "POST"])
