@@ -77,12 +77,106 @@ def admin_problems(userid: int, courseid: int, homeworkid: int):
     return "Error handling (not done yet)..."
 
 
-@problem_api.route("/<userid>/admin/<courseid>/homework/<homeworkid>/add")
+@problem_api.route("/<userid>/admin/<courseid>/homework/<homeworkid>/add", methods=["GET", "POST"])
 @jwt_required()
 def add(userid: int, courseid: int, homeworkid: int):
-    '''add problem into homework
+    '''add problem page
     '''
-    pass
+    try:
+        session = get_orm_session()
+        user, course = get_user_course(userid, courseid)
+        homework = session.query(Homework).filter(Homework.homeworkid == homeworkid).first()
+
+        data = {
+            "user": user.to_dict(),
+            "course": course.to_dict(),
+            "homework": homework.to_dict(),
+        }
+
+        if request.method == "POST":
+            new_problem_form = {key: value for key, value in request.form.items()}
+            new_problem_form["is_show"] = True
+
+            new_problem = Problem(**new_problem_form)
+            
+            session.add(new_problem)
+            session.commit()
+
+            return {"msg": "post_hahaha"}
+
+        return render_template("admin/problem_add.html", **data)
+
+    except Exception as err:
+        print(f"Occur error: {err}")
+
+    return "Error handling (not done yet)..."
+
+
+
+# @problem_api.route("/<userid>/admin/<courseid>/homework/<homeworkid>/add", methods=["GET", "POST"])
+# @jwt_required()
+# def add(userid: int, courseid: int, homeworkid: int):
+#     '''add problem
+#     '''
+#     try:
+#         # input / textarea format
+#         name = request.form.get("name")
+#         score = request.form.get("score")
+#         memory_limit = request.form.get("memory_limit")
+#         time_limit = request.form.get("time_limit")
+#         description = request.form.get("description")
+#         input_format = request.form.get("input_format")
+#         output_format = request.form.get("output_format")
+#         sample_input_1 = request.form.get("sample_input_1")
+#         sample_output_1 = request.form.get("sample_output_1")
+#         sample_input_2 = request.form.get("sample_input_2")
+#         sample_output_2 = request.form.get("sample_output_2")
+#         sample_input_3 = request.form.get("sample_input_3")
+#         sample_output_3 = request.form.get("sample_output_3")
+#         tags = request.form.get("tags")
+
+#         # testcase
+#         testcase = request.files.get("file")
+
+#         data = {
+#             "name": name,
+#             "score": score
+#         }
+#         return data
+
+#         # if not name or not description:
+#         #     flash("Name and Description are required.", "error")
+#         #     resp = redirect(request.url)
+#         #     resp.headers['X-CSRF-TOKEN'] = 
+
+#         #     return resp
+
+#         new_problem = Problem(
+#             homeworkid=homeworkid,
+#             name=name,
+#             score=100,  # default (will remove later)
+#             memory_limit=memory_limit,
+#             runtime_limit=time_limit,
+#             description=description,
+#             input_format=input_format,
+#             output_format=output_format,
+#             sample_input_1=sample_input_1,
+#             sample_output_1=sample_output_1,
+#             sample_input_2=sample_input_2,
+#             sample_output_2=sample_output_2,
+#             sample_input_3=sample_input_3,
+#             sample_output_3=sample_output_3,
+#         )
+
+#         # session.add(new_problem)
+#         # session.commit()
+
+#         return "123"
+    
+#     except Exception as err:
+#         print(f"Occur error: {err}")
+
+#     return "Error handling (not done yet)..."
 
 
 @problem_api.route("/<userid>/admin/<courseid>/homework/<homeworkid>/<problemid>/edit")

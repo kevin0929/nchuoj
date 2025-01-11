@@ -42,9 +42,10 @@
                 <span class="text-sm font-medium">Go back</span>
             </a>
 
-            <!-- Add Homework Btn -->
+            <!-- Add Problem Btn -->
             <div class="flex justify-start items-center mb-4 space-x-4">
-                <button id="add-homework-btn" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Add Problem</button>
+                <button id="add-homework-btn" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                    onclick="window.location.href='{{ url_for('problem_api.add', userid=user.userid, courseid=course.courseid, homeworkid=homework.homeworkid) }}'">Add Problem</button>
             </div>
 
             <!-- Homework Management Table -->
