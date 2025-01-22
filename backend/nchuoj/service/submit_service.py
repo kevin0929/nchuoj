@@ -12,6 +12,7 @@ class SubmitService:
         '''
         return base64.b64encode(data.encode("utf-8")).decode("utf-8")
 
+
     def submit(
         self,
         langid: int,
@@ -33,9 +34,15 @@ class SubmitService:
 
         JUDGE0_API_URL = f"{self.JUDGE0_BASE_API_URL}/submissions?base64_encoded=true&wait=true" if wait else f"{self.JUDGE0_BASE_API_URL}/submissions"
 
-        for testcase in testcases:
-            stdin = self.encode_base64(testcase["input_data"].decode("utf-8"))
-            expected_output = self.encode_base64(testcase["output_data"].decode("utf-8"))
+        # group testcases into inputs and outputs
+        inputs = {tc["filename"]: tc["content"] for tc in testcases if tc["filename"].endswith(".in")}
+        outputs = {tc["filename"].replace(".in", ".out"): tc["content"] for tc in testcases if tc["filename"].endswith(".out")}
+
+        for input_filename, input_content in inputs.items():
+            output_filename = input_filename.replace(".in", ".out")
+
+            stdin = self.encode_base64(input_content.decode("utf-8"))
+            expected_output = self.encode_base64(outputs[output_filename].decode("utf-8"))
 
             payload = {
                 "source_code": self.encode_base64(source_code),
@@ -47,10 +54,13 @@ class SubmitService:
             }
 
             response = requests.post(JUDGE0_API_URL, json=payload)
+            print(response.status_code)
+            print(response.json())
  
             if response.status_code == 201:
                 result = response.json()
                 status = result["status"]["description"]
+                print(status)
 
                 # if test failure, stop continuously test
                 if status != "Accepted":
@@ -64,7 +74,8 @@ class SubmitService:
         resp = {
             "execute_time": execute_time,
             "memory_usage": memory_usage,
-            "status": final_status
+            "status": final_status,
+            "short_status": self.get_short_status_table(final_status),
         }
 
         return resp
@@ -78,3 +89,14 @@ class SubmitService:
         }
 
         return language_table[language_name]
+
+    
+    def get_short_status_table(self, status_name: str) -> str:
+        short_status_table = {
+            "Accepted": "AC",
+            "Wrong Answer": "WA",
+            "Time Limit Exceeded": "TLE",
+            "Compilation Error": "CE",
+        }
+
+        return short_status_table.get(status_name, "OTHER")

@@ -7,6 +7,7 @@ from . import homework
 from . import problem
 from . import submission
 from . import testcase
+from . import user_problem_score
 
 from .base import *
 from .user import *
@@ -17,6 +18,7 @@ from .homework import *
 from .problem import *
 from .submission import *
 from .testcase import *
+from .user_problem_score import *
 
 
 __all__ = [
@@ -29,4 +31,5 @@ __all__ = [
     *problem.__all__,
     *submission.__all__,
     *testcase.__all__,
+    *user_problem_score.__all__,
 ]

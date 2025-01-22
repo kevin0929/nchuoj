@@ -14,6 +14,7 @@ from model.homework import Homework
 from model.problem import Problem
 from model.submission import Submission
 from model.testcase import Testcase
+from model.user_problem_score import UserProblemScore
 from model.utils.db import *
 from service.problem_service import ProblemService
 from service.submit_service import SubmitService
@@ -87,22 +88,41 @@ def add(userid: int, courseid: int, homeworkid: int):
         user, course = get_user_course(userid, courseid)
         homework = session.query(Homework).filter(Homework.homeworkid == homeworkid).first()
 
+        # convert user / course / homework to dict and make a summary dict
+        data_user = user.to_dict()
+        data_course = course.to_dict()
+        data_homework = homework.to_dict()
+        
         data = {
-            "user": user.to_dict(),
-            "course": course.to_dict(),
-            "homework": homework.to_dict(),
+            "userid": data_user["userid"], # for url
+            "courseid": data_course["courseid"],
+            "homeworkid": data_homework["homeworkid"],
+            "user": data_user, # for render page
+            "course": data_course,
+            "homeworks": data_homework
         }
 
         if request.method == "POST":
-            new_problem_form = {key: value for key, value in request.form.items()}
-            new_problem_form["is_show"] = True
+            new_problem_info = {key: value for key, value in request.form.items()}
+            new_problem_info["is_show"] = True
 
-            new_problem = Problem(**new_problem_form)
+            if "testcase" in request.files:
+                testcases = request.files.get("testcase")
+                resp = ProblemService.add_problem(
+                    new_problem_info,
+                    testcases,
+                )
+
+                # flash msg and back to problems page
+                if resp["status"] == "success":
+                    flash(resp["msg"], "success")
+                else:
+                    flash(resp["msg"], "error")
+                
+                return redirect(url_for("problem_api.admin_problems", **data))
             
-            session.add(new_problem)
-            session.commit()
-
-            return {"msg": "post_hahaha"}
+            flash("Please upload testcase zip file", "error")
+            return redirect(url_for("problem_api.admin_problems", **data))
 
         return render_template("admin/problem_add.html", **data)
 
@@ -110,73 +130,6 @@ def add(userid: int, courseid: int, homeworkid: int):
         print(f"Occur error: {err}")
 
     return "Error handling (not done yet)..."
-
-
-
-# @problem_api.route("/<userid>/admin/<courseid>/homework/<homeworkid>/add", methods=["GET", "POST"])
-# @jwt_required()
-# def add(userid: int, courseid: int, homeworkid: int):
-#     '''add problem
-#     '''
-#     try:
-#         # input / textarea format
-#         name = request.form.get("name")
-#         score = request.form.get("score")
-#         memory_limit = request.form.get("memory_limit")
-#         time_limit = request.form.get("time_limit")
-#         description = request.form.get("description")
-#         input_format = request.form.get("input_format")
-#         output_format = request.form.get("output_format")
-#         sample_input_1 = request.form.get("sample_input_1")
-#         sample_output_1 = request.form.get("sample_output_1")
-#         sample_input_2 = request.form.get("sample_input_2")
-#         sample_output_2 = request.form.get("sample_output_2")
-#         sample_input_3 = request.form.get("sample_input_3")
-#         sample_output_3 = request.form.get("sample_output_3")
-#         tags = request.form.get("tags")
-
-#         # testcase
-#         testcase = request.files.get("file")
-
-#         data = {
-#             "name": name,
-#             "score": score
-#         }
-#         return data
-
-#         # if not name or not description:
-#         #     flash("Name and Description are required.", "error")
-#         #     resp = redirect(request.url)
-#         #     resp.headers['X-CSRF-TOKEN'] = 
-
-#         #     return resp
-
-#         new_problem = Problem(
-#             homeworkid=homeworkid,
-#             name=name,
-#             score=100,  # default (will remove later)
-#             memory_limit=memory_limit,
-#             runtime_limit=time_limit,
-#             description=description,
-#             input_format=input_format,
-#             output_format=output_format,
-#             sample_input_1=sample_input_1,
-#             sample_output_1=sample_output_1,
-#             sample_input_2=sample_input_2,
-#             sample_output_2=sample_output_2,
-#             sample_input_3=sample_input_3,
-#             sample_output_3=sample_output_3,
-#         )
-
-#         # session.add(new_problem)
-#         # session.commit()
-
-#         return "123"
-    
-#     except Exception as err:
-#         print(f"Occur error: {err}")
-
-#     return "Error handling (not done yet)..."
 
 
 @problem_api.route("/<userid>/admin/<courseid>/homework/<homeworkid>/<problemid>/edit")
@@ -271,8 +224,9 @@ def submit(problemid):
         submit_time = datetime.now(timezone(timedelta(hours=8)))
         userid = get_jwt_identity()
 
-        # create Submission interface and sumbit to database
+        # create submission and score interface and sumbit to database
         if (runtime is not None) and (memory is not None) and status:
+            # submission
             new_submission = Submission(
                 userid=userid,
                 problemid=problemid,
@@ -283,8 +237,26 @@ def submit(problemid):
                 status=status,
                 submit_time=submit_time
             )
-
             session.add(new_submission)
+
+            # user problem score
+            check_score = session.query(UserProblemScore).filter_by(userid=userid, problemid=problem["problemid"]).first()
+            if check_score:
+                if check_score.status != "AC":
+                    if resp["short_status"] == "AC":
+                        check_score.score = 100
+                        check_score.status = "AC"
+                    else:
+                        check_score.status = resp["short_status"]
+            else:
+                new_score = UserProblemScore(
+                    userid=userid,
+                    problemid=problem["problemid"],
+                    score=100 if resp["short_status"] == "AC" else 0,
+                    status=resp["short_status"]
+                ) 
+                session.add(new_score)
+
             session.commit()
 
         session.close()

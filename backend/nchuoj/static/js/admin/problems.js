@@ -70,11 +70,11 @@ document.addEventListener("DOMContentLoaded", () => {
     function changePage(page) {
         currentPage = page;
         renderTable(page);
-        renderPagination(Math.ceil(homeworks.length / perPage));
+        renderPagination(Math.ceil(problems.length / perPage));
     }
 
     renderTable(currentPage);
-    renderPagination(Math.ceil(homeworks.length / perPage));
+    renderPagination(Math.ceil(problems.length / perPage));
 
     // Get cookie name function
     function getCookie(name) {

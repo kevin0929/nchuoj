@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 <tr class="border-b hover:bg-gray-100">
                     <td class="py-2 px-4">${submission.submission.submissionid}</td>
                     <td class="py-2 px-4 text-blue-600 hover:underline"> 
-                        <a href="/course/${user.userid}/${course.courseid}/homework/${submission.problem.homeworkid}/${submission.submission.problemid}">
+                        <a href="/problem/${user.userid}/${course.courseid}/homework/${submission.problem.homeworkid}/${submission.submission.problemid}">
                             #${submission.submission.problemid} - ${submission.problem.name}
                         </a>
                     </td>
