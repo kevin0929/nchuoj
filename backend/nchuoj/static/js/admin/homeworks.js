@@ -32,7 +32,8 @@ document.addEventListener("DOMContentLoaded", () => {
             const endDateFormatted = formatDate(homework.end_date);
             const editUrl = `/homework/${userid}/admin/${courseid}/homework/${homework.homeworkid}/edit`;
             const row = `
-                <tr class="border-b hover:bg-gray-100">
+                <tr class="border-b hover:bg-gray-100transition duration-200 cursor-pointer"
+                    onclick="window.location.href='${editUrl}'">
                     <td class="py-2 px-4">${homework.homeworkid}</td>
                     <td class="py-2 px-4">${homework.name}</td>
                     <td class="py-2 px-4">${startDateFormatted}</td>

@@ -99,7 +99,7 @@ def add(userid: int, courseid: int, homeworkid: int):
             "homeworkid": data_homework["homeworkid"],
             "user": data_user, # for render page
             "course": data_course,
-            "homeworks": data_homework
+            "homework": data_homework
         }
 
         if request.method == "POST":

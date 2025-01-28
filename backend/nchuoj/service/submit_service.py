@@ -54,13 +54,10 @@ class SubmitService:
             }
 
             response = requests.post(JUDGE0_API_URL, json=payload)
-            print(response.status_code)
-            print(response.json())
  
             if response.status_code == 201:
                 result = response.json()
                 status = result["status"]["description"]
-                print(status)
 
                 # if test failure, stop continuously test
                 if status != "Accepted":

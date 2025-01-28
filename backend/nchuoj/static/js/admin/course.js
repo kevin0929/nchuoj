@@ -46,7 +46,8 @@ document.addEventListener("DOMContentLoaded", () => {
             const endDateFormatted = formatDate(course.end_date);
             const editUrl = `/course/${userid}/admin/${course.courseid}/edit`
             const row = `
-                <tr class="border-b hover:bg-gray-100">
+                <tr class="border-b hover:bg-gray-100 transition duration-200 cursor-pointer"
+                    onclick="window.location.href='${editUrl}'">
                     <td class="py-2 px-4">${course.courseid}</td>
                     <td class="py-2 px-4">${course.coursename}</td>
                     <td class="py-2 px-4">${course.teacher}</td>

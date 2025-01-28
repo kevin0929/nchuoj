@@ -1,7 +1,22 @@
 {% extends "base.html" %}
 {% block extrahead %}
+    <!-- simpleMDE -->
     <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+
+    <!-- markdown-it -->
+    <script src="https://cdn.jsdelivr.net/npm/markdown-it@14.0.0/dist/markdown-it.min.js"
+        integrity="sha256-vNrI7Be7OvtxCt81pQFiwouPfW6/1dflm4CAAqE5GZU=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/markdown-it-texmath@1.0.0/texmath.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/markdown-it-texmath@1.0.0/css/texmath.min.css">
+
+    <!-- katex -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css" integrity="sha384-zh0CIslj+VczCZtlzBcjt5ppRcsAmDnRem7ESsYwWwg3m/OaJ2l4x7YBZl9Kxxib" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.js" integrity="sha384-Rma6DA2IPUwhNxmrB/7S3Tno0YY7sFu9WSYMCuulLhIqYSGZ2gKCJWIqhBWqMQfh" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/contrib/auto-render.min.js" integrity="sha384-hCXGrW6PitJEwbkoStFjeJxv+fSOOQKOPbJxSfM6G5sWZjAyWhXiTIIAmQqnlLlh" crossorigin="anonymous"
+        onload="renderMathInElement(document.body);"></script>
+
+    <!-- tailwindcss -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 {% endblock extrahead %}
 
@@ -47,7 +62,7 @@
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700">Memory Limit</label>
-                        <input type="number" name="memory_limit" value="256.0" class="w-full border rounded p-2">
+                        <input type="number" name="memory_limit" value="2048.0" class="w-full border rounded p-2">
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700">Time Limit</label>
@@ -116,9 +131,38 @@
 <script>
     document.addEventListener("DOMContentLoaded", () => {
         // Initialize SimpleMDE for all textareas
-        new SimpleMDE({ element: document.getElementById("description") });
-        new SimpleMDE({ element: document.getElementById("input_format") });
-        new SimpleMDE({ element: document.getElementById("output_format") });
+        const md = markdownit({ html: true })
+        .use(texmath, {
+            engine: katex,
+            delimiters: 'dollars',
+            katexOptions: { macros: { "\\RR": "\\mathbb{R}" } }
+        });
+
+        const textareas = ["description", "input_format", "output_format"];
+
+        textareas.forEach(id => {
+            const element = document.getElementById(id);
+            if (element) {
+                new SimpleMDE({
+                    element: element,
+                    autosave: {
+                        enabled: true,
+                        uniqueId: `autosave_${id}`,
+                        delay: 1000,
+                    },
+                    spellChecker: false,
+                    indentWithTabs: true,
+                    toolbar: [
+                        "bold", "italic", "heading", "|", "quote", "unordered-list", 
+                        "ordered-list", "|", "link", "image", "table", "|", "preview", 
+                        "side-by-side", "fullscreen", "|", "horizontal-rule", "|", "guide"
+                    ],
+                    previewRender(plainText) {
+                        return md.render(plainText);
+                    }
+                });
+            }
+        });
 
         // Get cookie name function
         function getCookie(name) {

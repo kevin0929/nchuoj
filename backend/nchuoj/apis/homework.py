@@ -5,6 +5,7 @@ from flask_jwt_extended import (
 
 from model.homework import Homework
 from model.problem import Problem
+from model.user_problem_score import UserProblemScore
 from model.utils.db import *
 
 
@@ -50,11 +51,26 @@ def homework(userid: int, courseid: int, homeworkid: int):
         homework = session.query(Homework).filter_by(homeworkid=homeworkid).first()
         problems = session.query(Problem).filter_by(homeworkid=homeworkid).order_by(Problem.problemid).all()
 
+        user_problem_scores = (
+            session.query(UserProblemScore)
+            .filter(UserProblemScore.userid == userid, UserProblemScore.problemid.in_([p.problemid for p in problems]))
+            .all()
+        )
+
+        # package dictionary
+        problem_score_map = {ups.problemid: ups.to_dict()["status"] for ups in user_problem_scores}
+
+        problems_data = []
+        for problem in problems:
+            problem_data = problem.to_dict()
+            problem_data["status"] = problem_score_map.get(problem.problemid, None)
+            problems_data.append(problem_data)
+
         data = {
             "user": user.to_dict(),
             "course": course.to_dict(),
             "homework": homework.to_dict(),
-            "problems": [problem.to_dict() for problem in problems]
+            "problems": problems_data
         }
 
         return render_template("user/homework.html", **data)

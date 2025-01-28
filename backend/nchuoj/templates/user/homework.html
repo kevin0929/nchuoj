@@ -65,9 +65,10 @@
                     <table class="min-w-full border border-gray-200 rounded-lg">
                         <thead>
                             <tr>
+                                <th class="px-4 py-2 text-left text-sm font-medium text-gray-600 border-b"></th>
                                 <th class="px-4 py-2 text-left text-sm font-medium text-gray-600 border-b">#</th>
                                 <th class="px-4 py-2 text-left text-sm font-medium text-gray-600 border-b">PID</th>
-                                <th class="px-4 py-2 text-left text-sm font-medium text-gray-600 border-b">Name</th>
+                                <th class="px-4 py-2 text-left text-sm font-medium textn-gray-600 border-b">Name</th>
                                 <th class="px-4 py-2 text-left text-sm font-medium text-gray-600 border-b">Score</th>
                                 <th class="px-4 py-2 text-left text-sm font-medium text-gray-600 border-b">Tag</th>
                             </tr>
@@ -76,6 +77,11 @@
                             {% for problem in problems %}
                             <tr class="border-b hover:bg-gray-100 cursor-pointer"
                                 onclick="window.location.href='{{ url_for('problem_api.problem', userid=user.userid, courseid=course.courseid, homeworkid=homework.homeworkid, problemid=problem.problemid) }}'">
+                                <td class="px-4 py-2 w-6">
+                                    {% if problem.status == "AC" %}
+                                        ✔️
+                                    {% endif %}
+                                </td>
                                 <td class="px-4 py-2">{{ loop.index }}</td>
                                 <td class="px-4 py-2 text-blue-600 hover:underline"><a href="#">{{ problem.problemid }}</a></td>
                                 <td class="px-4 py-2">{{ problem.name }}</td>

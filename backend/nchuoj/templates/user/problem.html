@@ -1,5 +1,17 @@
 {% extends "base.html" %}
 {% block extrahead %}
+    <!-- markdown-it -->
+    <script src="https://cdn.jsdelivr.net/npm/markdown-it@14.0.0/dist/markdown-it.min.js"
+    integrity="sha256-vNrI7Be7OvtxCt81pQFiwouPfW6/1dflm4CAAqE5GZU=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/markdown-it-texmath@1.0.0/texmath.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/markdown-it-texmath@1.0.0/css/texmath.min.css">
+
+    <!-- katex -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css" integrity="sha384-zh0CIslj+VczCZtlzBcjt5ppRcsAmDnRem7ESsYwWwg3m/OaJ2l4x7YBZl9Kxxib" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.js" integrity="sha384-Rma6DA2IPUwhNxmrB/7S3Tno0YY7sFu9WSYMCuulLhIqYSGZ2gKCJWIqhBWqMQfh" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/contrib/auto-render.min.js" integrity="sha384-hCXGrW6PitJEwbkoStFjeJxv+fSOOQKOPbJxSfM6G5sWZjAyWhXiTIIAmQqnlLlh" crossorigin="anonymous"
+        onload="renderMathInElement(document.body);"></script>
+
     <script src="{{ url_for('static', filename='js/problem.js') }}"></script>
 {% endblock extrahead %}
 
@@ -69,25 +81,19 @@
             <!-- Description Section -->
             <div class="mb-8">
                 <h2 class="text-lg font-semibold text-gray-800 mb-2">Description</h2>
-                <p class="text-gray-700 leading-relaxed">
-                    {{ problem.description }}
-                </p>
+                <div class="text-gray-700 leading-relaxed markdown-content" data-content="{{ problem.description }}"></div>
             </div>
 
             <!-- Input Section -->
             <div class="mb-8">
                 <h2 class="text-lg font-semibold text-gray-800 mb-2">Input</h2>
-                <p class="text-gray-700 leading-relaxed">
-                    {{ problem.input_format }}
-                </p>
+                <div class="text-gray-700 leading-relaxed markdown-content" data-content="{{ problem.input_format }}"></div>
             </div>
 
             <!-- Output Format -->
             <div class="mb-8">
                 <h2 class="text-lg font-semibold text-gray-800 mb-2">Output</h2>
-                <p class="text-gray-700 leading-relaxed">
-                    {{ problem.output_format }}
-                </p>
+                <div class="text-gray-700 leading-relaxed markdown-content" data-content="{{ problem.output_format }}"></div>
             </div>
 
             <!-- Sample Cases Section -->
@@ -197,5 +203,23 @@
     </div>
 </div>
 
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const md = markdownit({ html: true })
+            .use(texmath, {
+                engine: katex,
+                delimiters: 'dollars',
+                katexOptions: { macros: { "\\RR": "\\mathbb{R}" } }
+            });
+    
+        document.querySelectorAll('.markdown-content').forEach(el => {
+            const rawContent = el.getAttribute('data-content');
+            if (rawContent) {
+                el.innerHTML = md.render(rawContent);
+            }
+        });
+    });
+    
+</script>
 
 {% endblock content %}

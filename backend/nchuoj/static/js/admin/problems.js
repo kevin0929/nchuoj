@@ -20,7 +20,8 @@ document.addEventListener("DOMContentLoaded", () => {
         pageData.forEach(problem => {
             const editUrl = `/problem/${userid}/admin/${courseid}/homework/${homeworkid}/${problem.problemid}/edit`;
             const row = `
-                <tr class="border-b hover:bg-gray-100">
+                <tr class="border-b hover:bg-gray-100 transition duration-200 cursor-pointer"
+                    onclick="window.location.href='${editUrl}'">
                     <td class="py-2 px-4">${problem.problemid}</td>
                     <td class="py-2 px-4">${problem.name}</td>
                     <td class="py-2 px-4">${problem.tag}</td>

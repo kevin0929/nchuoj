@@ -64,7 +64,6 @@ class ProblemService:
                         # read content
                         with zf.open(filename) as file:
                             testcase_content = file.read()
-                            print(testcase_content)
 
                         new_testcase = Testcase(
                             problemid=new_problem.problemid,
