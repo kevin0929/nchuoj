@@ -12,67 +12,73 @@ document.addEventListener('DOMContentLoaded', function() {
     const problemId = confirmSubmitButton.dataset.problemId;
     const courseId = confirmSubmitButton.dataset.courseId;
 
+    // build loading area
+    const loadingOverlay = document.createElement("div");
+    loadingOverlay.id = "loadingOverlay";
+    loadingOverlay.classList.add(
+        "absolute", "inset-0", "flex", "items-center", "justify-center", "bg-white", "bg-opacity-75", "hidden"
+    );
+    loadingOverlay.innerHTML = `
+        <div class="flex flex-col items-center">
+            <div class="w-10 h-10 border-4 border-blue-500 border-dashed rounded-full animate-spin"></div>
+            <p class="text-gray-700 font-medium mt-2">Judging...</p>
+        </div>
+    `;
+    submitModal.appendChild(loadingOverlay);
 
-    // show modal
     submitButton.addEventListener('click', function(event) {
         event.preventDefault();
         submitModal.classList.remove('hidden');
     });
 
-    // click cancel button and hide modal
     cancelButton.addEventListener('click', function() {
         submitModal.classList.add('hidden');
+        loadingOverlay.classList.add("hidden");
+        confirmSubmitButton.disabled = false;
     });
 
-    // select code option
     codeOption.addEventListener('click', function() {
         codeSection.classList.remove('hidden');
         fileSection.classList.add('hidden');
-        codeOption.classList.add('border-b-2', 'border-blue-600', 'text-blue-600', 'font-semibold');
-        fileOption.classList.remove('border-b-2', 'border-blue-600', 'text-blue-600', 'font-semibold');
-        fileOption.classList.add('text-gray-600');
     });
 
-    // select file option
     fileOption.addEventListener('click', function() {
         fileSection.classList.remove('hidden');
         codeSection.classList.add('hidden');
-        fileOption.classList.add('border-b-2', 'border-blue-600', 'text-blue-600', 'font-semibold');
-        codeOption.classList.remove('border-b-2', 'border-blue-600', 'text-blue-600', 'font-semibold');
-        codeOption.classList.add('text-gray-600');
     });
 
-    // 確認提交操作
+    // get CSRF Token
+    function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+    }
+
+    // check submit operation
     confirmSubmitButton.addEventListener('click', async function() {
         const submitUrl = `/problem/${problemId}/submit`;
 
         const formData = new FormData();
         formData.append('courseid', courseId);
-        // submit the data of code field
+
         if (!codeSection.classList.contains('hidden')) {
             const language = document.getElementById('languageCode').value;
             const code = document.getElementById('codeInput').value;
-
             formData.append('type', 'code');
             formData.append('language', language);
             formData.append('code', code);
-        }
-        else if (!fileSection.classList.contains('hidden')) {
-            const language = document.getElementById('languageCode').value;
+        } else if (!fileSection.classList.contains('hidden')) {
+            const language = document.getElementById('languageFile').value;
             const file = document.getElementById('fileInput').files[0];
-
             formData.append('type', 'file');
             formData.append('language', language);
             formData.append('content', file);
         }
 
-        function getCookie(name) {
-            const value = `; ${document.cookie}`;
-            const parts = value.split(`; ${name}=`);
-            if (parts.length === 2) return parts.pop().split(';').shift();
-        }
+        // disable button and show loading...
+        confirmSubmitButton.disabled = true;
+        loadingOverlay.classList.remove("hidden");
 
-        // Post to submitUrl
         try {
             const response = await fetch(submitUrl, {
                 method: 'POST',
@@ -83,17 +89,46 @@ document.addEventListener('DOMContentLoaded', function() {
             });
 
             const result = await response.json();
+            const message = result.message || "Your submission was successfully processed!";
+            const redirectUrl = result.redirectUrl || `/problem/${problemId}`;
+
+            // remove loading
+            loadingOverlay.classList.add("hidden");
+
             if (result.success) {
-                alert("提交成功！");
-                window.location.href = result.redirectUrl;
-                submitModal.classList.add('hidden');
+                    window.location.href = redirectUrl;
             } else {
-                console.log(result.success);
-                alert("提交失敗：" + result.msg);
+                submitModal.innerHTML = `
+                    <div class="text-center p-6">
+                        <p class="text-red-600 font-bold text-lg">❌ Submission Failed</p>
+                        <p class="text-gray-600">${result.msg || "An unknown error occurred."}</p>
+                        <button id="closeErrorModal" class="mt-4 px-4 py-2 bg-gray-500 text-white rounded">Retry</button>
+                    </div>
+                `;
+
+                document.getElementById("closeErrorModal").addEventListener("click", function () {
+                    submitModal.classList.add("hidden");
+                    window.location.reload();
+                });
             }
         } catch (error) {
             console.error("提交錯誤:", error);
-            alert("提交失敗，請稍後再試！");
+            loadingOverlay.classList.add("hidden");
+
+            submitModal.innerHTML = `
+                <div class="text-center p-6">
+                    <p class="text-red-600 font-bold text-lg">⚠️ Network Error</p>
+                    <p class="text-gray-600">Failed to submit. Please check your internet connection and try again.</p>
+                    <button id="closeNetworkError" class="mt-4 px-4 py-2 bg-gray-500 text-white rounded">Close</button>
+                </div>
+            `;
+
+            document.getElementById("closeNetworkError").addEventListener("click", function () {
+                submitModal.classList.add("hidden");
+                window.location.reload();
+            });
+        } finally {
+            confirmSubmitButton.disabled = false;
         }
     });
 });
