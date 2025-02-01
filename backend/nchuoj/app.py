@@ -17,7 +17,8 @@ def app():
         (problem_api, "/problem"),
         (announcement_api, "/announcement"),
         (homework_api, "/homework"),
-        (submission_api, "/submission")
+        (submission_api, "/submission"),
+        (course_user_api, "/course_user")
     ]
     for api, prefix in api2prefix:
         app.register_blueprint(api, url_prefix=prefix)

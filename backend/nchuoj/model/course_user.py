@@ -11,3 +11,11 @@ class CourseUser(Base):
     cu_id = Column(Integer, primary_key=True, autoincrement=True)
     userid = Column(Integer, ForeignKey("users.userid"), nullable=False)
     courseid = Column(Integer, ForeignKey("course.courseid"), nullable=False)
+
+
+    def to_dict(self):
+        return {
+            "cu_id": self.cu_id,
+            "userid": self.userid,
+            "courseid": self.courseid,
+        }

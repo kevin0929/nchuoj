@@ -12,6 +12,7 @@ __all__ = ["user_api"]
 
 user_api = Blueprint("user_api", __name__)
 
+
 @user_api.route("/<userid>/index", methods=["GET"])
 @jwt_required()
 def index(userid):

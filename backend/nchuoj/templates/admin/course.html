@@ -31,7 +31,7 @@
                     <a href="#" class="block text-gray-700 hover:text-blue-600 font-medium">Announcements</a>
                 </li>
                 <li>
-                    <a href="#" class="block text-gray-700 hover:text-blue-600 font-medium">Participants</a>
+                    <a href="{{ url_for('course_user_api.index', courseid=course.courseid) }}" class="block text-gray-700 hover:text-blue-600 font-medium">Participants</a>
                 </li>
             </ul>
         </aside>
