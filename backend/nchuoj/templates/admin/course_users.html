@@ -62,44 +62,11 @@
             </table>
             <div id="pagination" class="mt-6 flex justify-center space-x-2"></div>
             <div id="course-users-data" data-courseusers='{{ course_users|tojson }}'></div>
+            <div id="users-data" data-users='{{ users|tojson }}'></div>
+            <div id="courseid-data" data-courseid='{{ course.courseid }}'></div>
         </div>
     </div>
 </div>
-
-<!-- Modal for Editing User
-<div id="edit-user-modal" class="hidden fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-800 bg-opacity-50">
-    <div class="bg-white p-6 rounded-lg shadow-md w-1/3">
-        <h2 class="text-xl font-bold mb-4">Edit User</h2>
-        <form id="edit-user-form">
-            <input type="hidden" id="edit-uid">
-            <div class="mb-4">
-                <label for="edit-username" class="block text-gray-600 font-medium">Username</label>
-                <input type="text" id="edit-username" class="w-full p-2 border rounded">
-            </div>
-            <div class="mb-4">
-                <label for="edit-password" class="block text-gray-600 font-medium">Password</label>
-                <input type="text" id="edit-password" class="w-full p-2 border rounded">
-            </div>
-            <div class="mb-4">
-                <label for="edit-email" class="block text-gray-600 font-medium">Email</label>
-                <input type="email" id="edit-email" class="w-full p-2 border rounded">
-            </div>
-            <div class="mb-4">
-                <label for="edit-role" class="block text-gray-600 font-medium">Role</label>
-                <select id="edit-role" class="w-full p-2 border rounded">
-                    <option value="admin">Admin</option>
-                    <option value="teacher">Teacher</option>
-                    <option value="TA">TA</option>
-                    <option value="user">User</option>
-                </select>
-            </div>
-            <div class="flex justify-end">
-                <button type="button" id="cancel-edit" class="bg-gray-500 text-white px-4 py-2 rounded mr-2">Cancel</button>
-                <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Save</button>
-            </div>
-        </form>
-    </div>
-</div> -->
 
 <!-- Import CSV Modal
 <div id="import-csv-modal" class="hidden fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-800 bg-opacity-50">
@@ -118,43 +85,37 @@
     </div>
 </div> -->
 
-<!-- Add User Modal
-<div id="add-user-modal" class="hidden fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-800 bg-opacity-50">
-    <div class="bg-white p-6 rounded-lg shadow-md w-1/3">
-        <h2 class="text-xl font-bold mb-4">Add User</h2>
-        <form id="add-user-form">
-            <div class="mb-4">
-                <label for="add-username" class="block text-gray-600 font-medium">Username</label>
-                <input type="text" id="add-username" name="username" class="w-full p-2 border rounded">
-            </div>
-            <div class="mb-4">
-                <label for="add-password" class="block text-gray-600 font-medium">Password</label>
-                <input type="text" id="add-password" name="password" class="w-full p-2 border rounded">
-            </div>
-            <div class="mb-4">
-                <label for="add-email" class="block text-gray-600 font-medium">Email</label>
-                <input type="email" id="add-email" name="email" class="w-full p-2 border rounded">
-            </div>
-            <div class="mb-4">
-                <label for="add-fullname" class="block text-gray-600 font-medium">Fullname</label>
-                <input type="text" id="add-fullname" name="fullname" class="w-full p-2 border rounded">
-            </div>
-            <div class="mb-4">
-                <label for="add-role" class="block text-gray-600 font-medium">Role</label>
-                <select id="add-role" name="role" class="w-full p-2 border rounded">
-                    <option value="admin">Admin</option>
-                    <option value="teacher">Teacher</option>
-                    <option value="TA">TA</option>
-                    <option value="user">User</option>
-                </select>
-            </div>
-            <div class="flex justify-end">
-                <button type="button" id="cancel-add" class="bg-gray-500 text-white px-4 py-2 rounded mr-2">Cancel</button>
-                <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Add</button>
-            </div>
-        </form>
+<!-- Add Course User Modal -->
+<div id="add-user-modal" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 hidden z-50">
+    <div class="bg-white rounded-lg shadow-lg w-11/12 md:w-1/2">
+      <!-- Modal Header -->
+      <div class="flex justify-between items-center border-b px-4 py-2">
+        <h3 class="text-lg font-semibold">新增課程使用者</h3>
+        <button id="close-modal" class="text-gray-600 hover:text-gray-900 text-2xl">&times;</button>
+      </div>
+      <div class="p-4">
+        <!-- Search form -->
+        <div class="mb-4">
+          <input id="search-user" type="text" placeholder="搜尋使用者..." class="w-full border rounded px-3 py-2 focus:outline-blue-500" />
+        </div>
+        <!-- User list -->
+        <div class="max-h-60 overflow-y-auto border rounded p-2">
+          <ul id="user-list" class="space-y-2">
+          </ul>
+        </div>
+        <!-- Already choose -->
+        <div class="mt-4">
+          <h4 class="font-semibold">已選擇的使用者：</h4>
+          <ul id="selected-user-list" class="space-y-2">
+          </ul>
+        </div>
+      </div>
+      <!-- Modal Footer -->
+      <div class="flex justify-end border-t px-4 py-2">
+        <button id="confirm-add-users" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">新增</button>
+      </div>
     </div>
-</div> -->
+  </div>
 
 
 {% endblock content %}
